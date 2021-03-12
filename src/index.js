@@ -1,5 +1,4 @@
 import './style.css';
 import { Project } from './projects'
+import { Task } from './tasks'
 
-let y = Project("testy")
-console.log(y);
