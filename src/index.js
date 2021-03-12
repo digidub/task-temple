@@ -1,1 +1,5 @@
-console.log("Hello webpack!")
+import './style.css';
+import { Project } from './projects'
+
+let y = Project("testy")
+console.log(y);
