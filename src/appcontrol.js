@@ -1,41 +1,69 @@
 import { appData } from "./appdata";
 import { lsControl } from "./localstorage";
+import { Project } from './projects'
+import { Task } from './tasks'
+import { DOMcontrol } from './domcontrol'
 
 const appControl = (() => {
 
-const genDefaultProject = () => {
-    let defaultProject = Project("Default Project")
-}
+    const projectLoader = (obj) => {
+        if (storageCheck(`${obj}`)) fetch(`${obj}`)
+        else {
+            firstUse()
+        }
+    }
 
-const genDefaultTask = () => {
-    let defaultTask = Task("Create your first project (or task!)", "tasktemple lets you organise your to do list by groups - or projects. Set due date, priority, and add notes")
-}
+    const firstUse = () => {
+        let x = genDefault()
+        restore(appData.projects, x.dP)
+        restore(appData.projects[0].tasks, x.dT)
+        DOMcontrol.displayProjects();
+        DOMcontrol.displayTasks();
+    }
 
-const storageCheck = (obj) => {
-    lsControl.storageCheck(obj)
-}
+    const genDefaultProject = () => {
+        let defaultProject = Project("Default Project")
+        return defaultProject
+    }
 
-const restore = (obj) => {
-    appData.projects.push(obj)
-}
+    const genDefaultTask = () => {
+        let defaultTask = Task("Create your first project (or task!)", "tasktemple lets you organise your to do list by groups - or projects. Set due date, priority, and add notes")
+        return defaultTask
+    }
 
-const projectLoader = () => {
-    let fetchedProjects = storageCheck('projects');
-    restore(fetchedProjects)
-}
+    const genDefault = () => {
+        let dP = genDefaultProject()
+        let dT = genDefaultTask()
+        return { dP, dT }
+    }    
 
-const projectSaver = (obj) => {
-    lsControl.saveStorage(obj)
-}
+    const storageCheck = (obj) => {
+        lsControl.storageCheck(obj)
+    }
 
+    const restore = (target, payload) => {
+        pushObj(target, payload)
+    }
 
-return {
-    genDefaultProject,
-    genDefaultTask,
-    projectLoader,
-    restore,
-    storageCheck,
-}
+    const pushObj = (target, payload) => {
+        target.push(payload)
+    }
+
+    const fetch = (obj) => {
+        lsControl.fetchStorage(obj)
+    }
+
+    const projectSaver = (obj) => {
+        lsControl.saveStorage(obj)
+    }
+
+    return {
+        genDefaultProject,
+        genDefaultTask,
+        projectLoader,
+        restore,
+        storageCheck,
+    }
 
 })();
 
