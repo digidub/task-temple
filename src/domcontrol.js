@@ -5,8 +5,10 @@ import { ObjectToDOM } from "./objectdom";
 
 const DOMcontrol = (() => {
 
-    const projectView = document.querySelector(".project-view-list")
-    const taskView = document.querySelector(".task-view-list")
+    const projectView = document.querySelector(".project-view")
+    const taskView = document.querySelector(".task-view")
+    const projectViewList = document.querySelector(".project-view-list")
+    const taskViewList = document.querySelector(".task-view-list")
     const newProject = document.querySelector(".add-project")
     const newTask = document.querySelector(".add-task")
 
@@ -38,7 +40,7 @@ const DOMcontrol = (() => {
     const displayProjects = () => {
         appData.projects.forEach(project => {
             let div = setupDiv(project.name, "project-name")
-            projectView.appendChild(div);
+            projectViewList.appendChild(div);
         })
     }
 
@@ -46,7 +48,7 @@ const DOMcontrol = (() => {
         appData.projects.forEach(project => {
             project.tasks.forEach(task => {
                 let div = setupDiv(task.name, "task-name")
-                taskView.appendChild(div);
+                taskViewList.appendChild(div);
             })
         })
     }
@@ -67,21 +69,21 @@ const DOMcontrol = (() => {
 
     function generateForm(template, parent) {
         let form = ObjectToDOM.gen(Template[`${template}`]);
-        parent.prepend(form); //perhaps revisit this and have it placed in a DIV ABOVE the list of projects..
+        parent.insertBefore(form, parent.firstElementChild.nextSibling); //perhaps revisit this and have it placed in a DIV ABOVE the list of projects..
         formSubmitQuerySelector(template)
     }
 
     function formSubmitQuerySelector(template) {
         let submit = document.querySelector(`.${template}-submit`)
-        submit.addEventListener('click', (e) => {
+        submit.onclick = function(e) {
             e.preventDefault()
             getInput(template)
-        })
+        }
     }
 
-    function getInput(form) {
+    function getInput(form) { //this probably needs moving to app logic.
 
-        let nameInput = document.querySelector(`[name="${form}-title"]`).value;
+        let nameInput = document.querySelector(`[name="${form}-name"]`).value;
         if (nameInput == null) nameInput = "Untitled Project"
 
         let notesInput;
@@ -100,7 +102,7 @@ const DOMcontrol = (() => {
         let priorityInput = document.querySelector(`[name="${form}-priority"]`).value;
 
         if (!document.querySelector(`[name="${form}-notes"]`)) {
-            appControl.createNewProject(nameInput, dueInput, priorityInput)
+            appControl.createNewProject(nameInput, dueInput, priorityInput)            
         } else {
             //appControl.createNewTask(nameInput, dueInput, priorityInput)
         }
