@@ -1,3 +1,4 @@
+import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
 import { Template } from "./formtemplates";
 import { ObjectToDOM } from "./objectdom";
@@ -48,22 +49,65 @@ const DOMcontrol = (() => {
                 taskView.appendChild(div);
             })
         })
-    } 
+    }
 
-    function genForm(template) {
-        let form = ObjectToDOM.gen(Template[`${template}`]);
-        projectView.prepend(form); //perhaps revisit this and have it placed in a DIV ABOVE the list of projects..
-    }       
-
-    newProject.addEventListener('click', () => {
+    newProject.onclick = function () {
         if (!document.querySelector(".add-project-form")) {
-            genForm("addProject")
+            generateForm("project", projectView)
         }
         else projectView.removeChild(document.querySelector(".add-project-form"))
-    })    
+    }
+
+    newTask.onclick = function () {
+        if (!document.querySelector(".add-task-form")) {
+            generateForm("task", taskView)
+        }
+        else taskView.removeChild(document.querySelector(".add-task-form"))
+    }
+
+    function generateForm(template, parent) {
+        let form = ObjectToDOM.gen(Template[`${template}`]);
+        parent.prepend(form); //perhaps revisit this and have it placed in a DIV ABOVE the list of projects..
+        formSubmitQuerySelector(template)
+    }
+
+    function formSubmitQuerySelector(template) {
+        let submit = document.querySelector(`.${template}-submit`)
+        submit.addEventListener('click', (e) => {
+            e.preventDefault()
+            getInput(template)
+        })
+    }
+
+    function getInput(form) {
+
+        let nameInput = document.querySelector(`[name="${form}-title"]`).value;
+        if (nameInput == null) nameInput = "Untitled Project"
+
+        let notesInput;
+        if (document.querySelector(`[name="${form}-notes"]`)) {
+            notesInput = document.querySelector(`[name="${form}-notes"]`).value
+        }
+
+        let dueInput;
+        if (document.querySelector(`[name="${form}-due"]`).value) {
+            dueInput = document.querySelector(`[name="${form}-due"]`).value
+        }
+        else {
+            dueInput = null
+        }
+
+        let priorityInput = document.querySelector(`[name="${form}-priority"]`).value;
+
+        if (!document.querySelector(`[name="${form}-notes"]`)) {
+            appControl.createNewProject(nameInput, dueInput, priorityInput)
+        } else {
+            //appControl.createNewTask(nameInput, dueInput, priorityInput)
+        }
+
+    }
 
     return {
-        newProject,
         displayProjects,
         displayTasks
     }
