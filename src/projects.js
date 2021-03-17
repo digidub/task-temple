@@ -2,11 +2,11 @@ import { appData } from "./appdata";
 
 const Project = (projectName, dueDate = null, pri = "normal") => {
 
-    const name = projectName;
+    let name = projectName;
     const created = new Date();
-    const due = dueDate;
-    const completed = 0; //0 == uncompleted, 1 == completed
-    const priority = pri
+    let due = dueDate;
+    let completed = 0; //0 == uncompleted, 100 == completed
+    let priority = pri
     const tasks = [];
     const id = genID()
 
@@ -21,6 +21,20 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             return id;
         }
     }
+
+    function progress() {
+        let totalTasks = tasks.length
+        let tasksComplete = 0
+        for (let i = 0; i < totalTasks; i++) {
+            if (tasks[i].completed === 1) {
+                tasksComplete++
+            }            
+        }
+        let ratio = tasksComplete / totalTasks
+        complete = ratio * 100
+        return complete
+    }
+
 
     return {
         name,
