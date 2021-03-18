@@ -5,10 +5,39 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
     let name = projectName;
     const created = new Date();
     let due = dueDate;
-    let completed = 0; //0 == uncompleted, 100 == completed
-    let priority = pri
     const tasks = [];
+    let completed = 0; //0 == uncompleted, 100 == completed
+    let priority = pri    
     const id = genID()
+
+    function editName(newName) {
+        return name = newName
+    }
+
+    function editDue(newDue) {
+        return due = newDue
+    }
+
+    function editPriority(newPri) {
+        return priority = newPri
+    }
+
+    function getName() {
+        return name;
+    }
+
+    function getDue() {
+        return due;
+    }
+
+    function getPriority() {
+        return priority;
+    }
+
+    function getID() {
+        return id;
+    }
+    
 
     function genID() {
         if (appData.projects.length < 1) {
@@ -16,14 +45,15 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             return id;
         } else {
             let arr = appData.projects;
-            let maxID = Math.max(...array.map(arr => arr.id));
+            let maxID = Math.max(...arr.map(arr => arr.id));
             let id = maxID + 1;
             return id;
         }
     }
 
-    function progress() {
+    function updateProgress() {           
         let totalTasks = tasks.length
+        if (totalTasks > 1) return completed = 0;
         let tasksComplete = 0
         for (let i = 0; i < totalTasks; i++) {
             if (tasks[i].completed === 1) {
@@ -31,19 +61,20 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             }            
         }
         let ratio = tasksComplete / totalTasks
-        complete = ratio * 100
-        return complete
+        let progress = ratio * 100
+        return completed = progress
     }
 
 
     return {
-        name,
-        created,
-        due,
-        completed,
-        priority,
-        tasks,
-        id,
+        editDue,
+        editName,
+        editPriority,
+        getName,
+        getDue,
+        getPriority,
+        getID,
+        updateProgress,        
     }
 
 }
