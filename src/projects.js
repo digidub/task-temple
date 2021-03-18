@@ -36,8 +36,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
 
     function getID() {
         return id;
-    }
-    
+    }    
 
     function genID() {
         if (appData.projects.length < 1) {
@@ -45,9 +44,11 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             return id;
         } else {
             let arr = appData.projects;
-            let maxID = Math.max(...arr.map(arr => arr.id));
+            let maxID = Math.max(...arr.map(arr => arr.getID()));
             let id = maxID + 1;
+            console.log(id)
             return id;
+           
         }
     }
 
@@ -67,6 +68,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
 
 
     return {
+        tasks,
         editDue,
         editName,
         editPriority,
