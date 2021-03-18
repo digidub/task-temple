@@ -39,12 +39,12 @@ const DOMcontrol = (() => {
 
     const displayProjects = () => {
         appData.projects.forEach(project => {
-            let projectDiv = placeholderGen(project.getName(), project.getDue(), project.getID())            
+            let projectDiv = projectPlaceholderGen(project.getName(), project.getDue(), project.getID())            
             projectViewList.appendChild(projectDiv);
         })
     }
 
-    function placeholderGen(name, due, ID) {
+    function projectPlaceholderGen(name, due, ID) {
         let placeholderTemplate = Template.projectPlaceholder(name, due, ID)
         let placeholder = ObjectToDOM.gen(placeholderTemplate)
         return placeholder;
@@ -54,13 +54,25 @@ const DOMcontrol = (() => {
         projectViewList.appendChild(placeholder)
     }
 
-    const displayTasks = () => {
-        appData.projects.forEach(project => {
-            project.tasks.forEach(task => {
-                let div = setupDiv(task.name, "task-name")
-                taskViewList.appendChild(div);
-            })
-        })
+    function taskPlaceholderGen(name, notes, due, id) {
+        let placeholderTemplate = Template.taskPlaceholder(name, notes, due, id)
+        let placeholder = ObjectToDOM.gen(placeholderTemplate)
+        return placeholder;
+    }
+
+    function appendProject(placeholder) {        
+        projectViewList.appendChild(placeholder)
+    }
+
+    const displayTasks = (projectID) => {
+        let lookup = appData.projects.find(obj => obj.getID() === projectID) //applogic
+        taskViewList.innerHTML = "";
+        console.log(lookup)
+        
+        lookup.tasks.forEach(task => {
+            let taskDiv = taskPlaceholderGen(task.getName(), task.getNotes(), task.getDue(), 1)
+            taskViewList.appendChild(taskDiv)
+        })       
     }
 
     newProject.onclick = function () {
@@ -124,7 +136,8 @@ const DOMcontrol = (() => {
         displayProjects,
         displayTasks,
         appendProject,
-        placeholderGen,
+        projectPlaceholderGen,
+        taskPlaceholderGen,
     }
 
 
