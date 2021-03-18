@@ -1,6 +1,6 @@
 import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
-import { Template } from "./formtemplates";
+import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
 
 const DOMcontrol = (() => {
@@ -39,9 +39,19 @@ const DOMcontrol = (() => {
 
     const displayProjects = () => {
         appData.projects.forEach(project => {
-            let div = setupDiv(project.name, "project-name")
-            projectViewList.appendChild(div);
+            let projectDiv = placeholderGen(project.getName(), project.getDue(), project.getID())            
+            projectViewList.appendChild(projectDiv);
         })
+    }
+
+    function placeholderGen(name, due, ID) {
+        let placeholderTemplate = Template.projectPlaceholder(name, due, ID)
+        let placeholder = ObjectToDOM.gen(placeholderTemplate)
+        return placeholder;
+    }
+
+    function appendProject(placeholder) {        
+        projectViewList.appendChild(placeholder)
     }
 
     const displayTasks = () => {
@@ -65,7 +75,7 @@ const DOMcontrol = (() => {
             generateForm("task", taskView)
         }
         else taskView.removeChild(document.querySelector(".add-task-form"))
-    }
+    }   
 
     function generateForm(template, parent) {
         let form = ObjectToDOM.gen(Template[`${template}`]);
@@ -75,7 +85,7 @@ const DOMcontrol = (() => {
 
     function formSubmitQuerySelector(template) {
         let submit = document.querySelector(`.${template}-submit`)
-        submit.onclick = function(e) {
+        submit.onclick = function (e) {
             e.preventDefault()
             getInput(template)
         }
@@ -102,7 +112,7 @@ const DOMcontrol = (() => {
         let priorityInput = document.querySelector(`[name="${form}-priority"]`).value;
 
         if (!document.querySelector(`[name="${form}-notes"]`)) {
-            appControl.createNewProject(nameInput, dueInput, priorityInput)            
+            appControl.createNewProject(nameInput, dueInput, priorityInput)
         } else {
             //appControl.createNewTask(nameInput, dueInput, priorityInput)
         }
@@ -111,7 +121,9 @@ const DOMcontrol = (() => {
 
     return {
         displayProjects,
-        displayTasks
+        displayTasks,
+        appendProject,
+        placeholderGen,
     }
 
 
