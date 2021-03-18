@@ -88,6 +88,7 @@ const DOMcontrol = (() => {
         submit.onclick = function (e) {
             e.preventDefault()
             getInput(template)
+            document.querySelector(`.${template}-form`).reset();            
         }
     }
 
