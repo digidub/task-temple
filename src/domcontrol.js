@@ -65,14 +65,26 @@ const DOMcontrol = (() => {
     }
 
     const displayTasks = (projectID) => {
-        let lookup = appData.projects.find(obj => obj.getID() === projectID) //applogic
+        let lookup = appData.projects.find(obj => obj.getID() == projectID) //applogic
+        
         taskViewList.innerHTML = "";
         console.log(lookup)
+
+        if (lookup.tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         
         lookup.tasks.forEach(task => {
             let taskDiv = taskPlaceholderGen(task.getName(), task.getNotes(), task.getDue(), 1)
             taskViewList.appendChild(taskDiv)
         })       
+    }
+
+    projectViewList.onclick = function(e) {
+        if (e.target.className == "project-name") {
+            console.log(e.target.parentNode.id)
+            let projID = e.target.parentNode.id
+            displayTasks(projID)
+        }
+        
     }
 
     newProject.onclick = function () {
@@ -102,7 +114,7 @@ const DOMcontrol = (() => {
             getInput(template)
             document.querySelector(`.${template}-form`).reset();            
         }
-    }
+    }    
 
     function getInput(form) { //this probably needs moving to app logic.
 
