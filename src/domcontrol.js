@@ -10,7 +10,8 @@ const DOMcontrol = (() => {
     const projectViewList = document.querySelector(".project-view-list")
     const taskViewList = document.querySelector(".task-view-list")
     const newProject = document.querySelector(".add-project")
-    const newTask = document.querySelector(".add-task")    
+    const newTask = document.querySelector(".add-task")
+
 
     const displayProjects = () => {
         appData.projects.forEach(project => {
@@ -19,9 +20,9 @@ const DOMcontrol = (() => {
         })
     }
 
-    const displayTasks = (projectID) => {           
+    const displayTasks = (projectID) => {
         taskViewList.innerHTML = "";
-        if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"        
+        if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
             let taskDiv = placeholderGen(task.getName(), task.getDue(), task.getID(), "task", task.getNotes())
             taskViewList.appendChild(taskDiv)
@@ -29,24 +30,38 @@ const DOMcontrol = (() => {
     }
 
     function placeholderGen(name, due, ID, template, notes) {
-        let placeholderTemplate = Template[`${template}Placeholder`](name, due, ID, notes)        
+        let placeholderTemplate = Template[`${template}Placeholder`](name, due, ID, notes)
         let placeholder = ObjectToDOM.gen(placeholderTemplate)
         return placeholder;
     }
 
     function appendProject(placeholder) {
         projectViewList.appendChild(placeholder)
-    }    
+    }
 
     function appendTask(placeholder) {
         taskViewList.appendChild(placeholder)
-    }   
+    }
 
     projectViewList.onclick = function (e) {
         if (e.target.className == "project-name") {
             let projID = e.target.parentNode.id
             displayTasks(projID)
             appControl.setActiveProject(projID)
+        }
+    }
+
+    taskViewList.onclick = function (e) {
+        if (e.target.className == "task-notes" || e.target.className == "task-notes-expanded") {
+            let toExpand = e.target
+            if (toExpand.classList.contains("task-notes-expanded")) {
+                toExpand.classList.remove("task-notes-expanded")
+                toExpand.classList.add("task-notes")
+            }
+            else {
+                toExpand.classList.remove("task-notes")
+                toExpand.classList.add("task-notes-expanded")
+            }
         }
     }
 
@@ -74,12 +89,12 @@ const DOMcontrol = (() => {
         let submit = document.querySelector(`.${template}-submit`)
         submit.onclick = function (e) {
             e.preventDefault()
-            appControl.formToObject(template)            
+            appControl.formToObject(template)
             document.querySelector(`.${template}-form`).reset();
         }
-    }    
+    }
 
-    function getFormInput(template) { //this probably needs moving to app logic.
+    function getFormInput(template) {
 
         let nameInput = document.querySelector(`[name="${template}-name"]`).value;
         if (nameInput == "") nameInput = "Untitled Project"
@@ -97,11 +112,11 @@ const DOMcontrol = (() => {
             dueInput = null
         }
 
-        let priorityInput = document.querySelector(`[name="${template}-priority"]`).value;        
+        let priorityInput = document.querySelector(`[name="${template}-priority"]`).value;
 
-        return { nameInput, notesInput, dueInput, priorityInput }        
+        return { nameInput, notesInput, dueInput, priorityInput }
 
-    }    
+    }
 
     return {
         displayProjects,
