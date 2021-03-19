@@ -15,15 +15,16 @@ const appControl = (() => {
     }
 
     const firstUse = () => {
-        let x = genDefault()
-        restore(appData.projects, x.dP)
-        restore(appData.projects[0].tasks, x.dT)
+        let x = genDefault()        
+        pushObj(appData.projects[0].tasks, x.dT)
+        setActiveProject(1)
         DOMcontrol.displayProjects();
-        DOMcontrol.displayTasks();
+        DOMcontrol.displayTasks(1); //need to change this fig later on when ID logic sorted!
     }
 
     const genDefault = () => {
         let dP = genDefaultProject()
+        pushObj(appData.projects, dP)        
         let dT = genDefaultTask()
         return { dP, dT }
     }
@@ -40,11 +41,7 @@ const appControl = (() => {
 
     const storageCheck = (obj) => {
         lsControl.storageCheck(obj)
-    }
-
-    const restore = (target, payload) => {
-        pushObj(target, payload)
-    }
+    }    
 
     const pushObj = (target, payload) => {
         target.push(payload)
@@ -60,13 +57,14 @@ const appControl = (() => {
 
     const createNewProject = (name, due, priority) => {
         let newProject = Project(name, due, priority)
-        appData.projects.push(newProject)
-        newProjectDisplayController();
+        pushObj(appData.projects, newProject)
+        newProjectDisplayController(appData.projects, "project");
     }
 
-    const createNewTask = (name, desc, due, priority) => {
-        let newTask = Task(name, due, priority)
-        appData.projects.push(newProject)
+    const createNewTask = (proj, name, notes="", due, priority) => {
+        let newTask = Task(name, notes, due, priority)
+        pushObj(proj, newTask)
+        newProjectDisplayController(proj, "task");
     }
 
     const fetchNewestObject = (path) => {
@@ -74,24 +72,62 @@ const appControl = (() => {
         return newest
     }
 
-    const newProjectDisplayController = () => {
-        let newest = fetchNewestObject(appData.projects)
+    const newProjectDisplayController = (target, template) => {
+        let newest = fetchNewestObject(target)
         let nName = newest.getName()
+        let nNotes;
+        if (template == "task") nNotes = newest.getNotes()
         let nDue = newest.getDue()
         let nPriority = newest.getPriority() //need to include follow on logic for this later
-        let nID = newest.getID()        
-        let nDiv = DOMcontrol.placeholderGen(nName, nDue, nID)
-        DOMcontrol.appendProject(nDiv)
+        let nID = newest.getID()
+        let nDiv;
+        if (template == "project") {
+            nDiv = DOMcontrol.placeholderGen(nName, nDue, nID, template)
+            DOMcontrol.appendProject(nDiv)
+        } else {
+            nDiv = DOMcontrol.placeholderGen(nName, nDue, nID, template, nNotes)
+            DOMcontrol.appendTask(nDiv)
+        }
+        
+    }
+
+    function setActiveProject(projID) {
+        appData.setActiveProject(projID)
+    }
+
+    function getActiveProject() {
+        return appData.getActiveProject()
+    }
+
+    function lookupProject(id) {
+        let lookup = appData.projects.find(obj => obj.getID() == id)
+        return lookup;
+    }
+
+    function formToObject(template) {
+
+        let form = DOMcontrol.getFormInput(template)       
+
+        if (!document.querySelector(`[name="${template}-notes"]`)) {
+            appControl.createNewProject(form.nameInput, form.dueInput, form.priorityInput)
+        } else {            
+            let activeProject = lookupProject(getActiveProject())
+            appControl.createNewTask(activeProject.tasks, form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
+        }
     }
 
     return {
         genDefaultProject,
         genDefaultTask,
-        projectLoader,
-        restore,
+        projectLoader,        
         storageCheck,
         createNewProject,
         newProjectDisplayController,
+        createNewTask,
+        formToObject,
+        lookupProject,
+        setActiveProject,
+        getActiveProject,
     }
 
 })();
