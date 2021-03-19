@@ -2,13 +2,14 @@ const ObjectToDOM = (() => {
 
     const gen = obj => {
 
-        let domEl = document.createElement(obj.tag)
+        let domEl = document.createElement(obj.tag)        
 
         if (obj.content) domEl.innerText = obj.content
         if (obj.classes) for (let cssClass of obj.classes) {
             domEl.classList.add(cssClass)
         }
         if (obj.id) domEl.id = obj.id
+        if (obj.src) domEl.src = obj.src
         if (obj.for) domEl.htmlFor = obj.for
         if (obj.placeholder) domEl.placeholder = obj.placeholder
         if (obj.tag) domEl.tag = obj.tag
@@ -20,8 +21,8 @@ const ObjectToDOM = (() => {
         if (obj.selected) domEl.selected = "true"
         if (obj.required) domEl.required = obj.required
         if (obj.children) for (let child of obj.children) {
-            DOMgen(child)
-            domEl.append(DOMgen(child))
+            gen(child)
+            domEl.append(gen(child))
         }
         return domEl
     }

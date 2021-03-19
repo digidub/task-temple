@@ -7,7 +7,7 @@ const Template = (() => {
         children: [
             {
                 tag: 'form',
-                classes: ['project-form']
+                classes: ['project-form'],
                 children: [
                     {
                         tag: `div`,
@@ -27,7 +27,7 @@ const Template = (() => {
                             {
                                 tag: 'input',
                                 type: 'date',
-                                name: 'project-due',                                
+                                name: 'project-due',
                                 placeholder: 'Due Date'
                             }
                         ]
@@ -82,7 +82,7 @@ const Template = (() => {
         children: [
             {
                 tag: 'form',
-                classes: ['task-form']
+                classes: ['task-form'],
                 children: [
                     {
                         tag: `div`,
@@ -164,28 +164,73 @@ const Template = (() => {
 
     const projectPlaceholder = (projectName, projectDue, projectID) => {
         return {
-        tag: "div",
-        classes: ["project-placeholder"],
-        id: projectID,
-        children: [
-            {
-                tag: "div",
-                classes: ["project-name"],
-                content: projectName,
-            },
-            {
-                tag: "div",
-                classes: ["project-due"],
-                content: projectDue
-            }
+            tag: "div",
+            classes: ["project-placeholder"],
+            id: projectID,
+            children: [
+                {
+                    tag: "div",
+                    classes: ["project-name-due"],
+                    children: [
+                        {
+                            tag: "div",
+                            classes: ["project-name"],
+                            content: projectName,
+                        },
+                        {
+                            tag: "div",
+                            classes: ["project-due"],
+                            content: projectDue
+                        }
+                    ]
+                },
+                {
+                    tag: "div",
+                    classes: ["project-edit"],
+                    children: [
+                        {
+                            tag: "img",
+                            classes: ["project-edit-icon"],                            
+                            src: "edit.svg"
+                        },                        
+                    ]
+                },
 
-        ]
+            ]
 
+        }
     }
-}
+
+    const taskPlaceholder = (taskName, taskDue, taskID, taskNotes) => {
+        return {
+            tag: "div",
+            classes: ["task-placeholder"],
+            id: taskID,
+            children: [
+                {
+                    tag: "div",
+                    classes: ["task-name"],
+                    content: taskName,
+                },
+                {
+                    tag: "div",
+                    classes: ["task-notes"],
+                    content: taskNotes,
+                },
+                {
+                    tag: "div",
+                    classes: ["task-due"],
+                    content: taskDue
+                }
+
+            ]
+
+        }
+    }
 
     return {
         projectPlaceholder,
+        taskPlaceholder,
         project,
         task,
     }
