@@ -27,13 +27,7 @@ const DOMcontrol = (() => {
 
     function appendProject(placeholder) {
         projectViewList.appendChild(placeholder)
-    }
-
-    function taskPlaceholderGen(name, notes, due, id) {
-        let placeholderTemplate = Template.taskPlaceholder(name, notes, due, id)
-        let placeholder = ObjectToDOM.gen(placeholderTemplate)
-        return placeholder;
-    }
+    }    
 
     function appendProject(placeholder) {
         projectViewList.appendChild(placeholder)
@@ -137,8 +131,7 @@ const DOMcontrol = (() => {
         displayTasks,
         appendProject,
         appendTask,
-        placeholderGen,
-        taskPlaceholderGen,
+        placeholderGen,        
         lookupProject,
         getActiveProject,
     }
