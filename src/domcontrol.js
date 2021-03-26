@@ -15,7 +15,7 @@ const DOMcontrol = (() => {
 
     const displayProjects = () => {
         appData.projects.forEach(project => {
-            let projectDiv = placeholderGen(project.getName(), project.getDue(), project.getID(), "project")
+            let projectDiv = placeholderGen("project", project.getName(), project.getDue(), project.getPriority(), project.getID())
             projectViewList.appendChild(projectDiv);
         })
     }
@@ -24,13 +24,32 @@ const DOMcontrol = (() => {
         taskViewList.innerHTML = "";
         if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
-            let taskDiv = placeholderGen(task.getName(), task.getDue(), task.getID(), "task", task.getNotes())
+            let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getID(), task.getNotes())
             taskViewList.appendChild(taskDiv)
         })
     }
 
-    function placeholderGen(name, due, ID, template, notes) {
-        let placeholderTemplate = Template[`${template}Placeholder`](name, due, ID, notes)
+    function editProject(e) {
+        let editName = e.target.parentNode.previousElementSibling.querySelector(".project-name")
+        let editDueDiv = e.target.parentNode.previousElementSibling.querySelector(".project-due")
+        let editDue = editDueDiv.innerText
+        console.log(editDue)
+        editDueDiv.innerHTML=`<input type="date" name="project-due" id="edit-date">`
+        let editFormDiv = e.target.parentNode.previousElementSibling.querySelector("#edit-date")
+        editFormDiv.value = editDue
+        editName.setAttribute('contenteditable', 'true');
+        editName.focus();
+        let val = editName.innerText
+        editName.innerText = ""
+        editName.innerText = val
+    }
+
+    function editPriority() {
+
+    }
+
+    function placeholderGen(template, name, due, priority, ID, notes) {
+        let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes)
         let placeholder = ObjectToDOM.gen(placeholderTemplate)
         return placeholder;
     }
@@ -45,9 +64,12 @@ const DOMcontrol = (() => {
 
     projectViewList.onclick = function (e) {
         if (e.target.className == "project-name") {
-            let projID = e.target.parentNode.id
+            let projID = e.target.parentNode.parentNode.id
             displayTasks(projID)
             appControl.setActiveProject(projID)
+        }
+        else if (e.target.className == "project-edit-icon") {
+            editProject(e)
         }
     }
 

@@ -15,7 +15,7 @@ const appControl = (() => {
     }
 
     const firstUse = () => {
-        let x = genDefault()        
+        let x = genDefault()
         pushObj(appData.projects[0].tasks, x.dT)
         setActiveProject(1)
         DOMcontrol.displayProjects();
@@ -24,7 +24,7 @@ const appControl = (() => {
 
     const genDefault = () => {
         let dP = genDefaultProject()
-        pushObj(appData.projects, dP)        
+        pushObj(appData.projects, dP)
         let dT = genDefaultTask()
         return { dP, dT }
     }
@@ -41,7 +41,7 @@ const appControl = (() => {
 
     const storageCheck = (obj) => {
         lsControl.storageCheck(obj)
-    }    
+    }
 
     const pushObj = (target, payload) => {
         target.push(payload)
@@ -82,13 +82,13 @@ const appControl = (() => {
         let nID = newest.getID()
         let nDiv;
         if (template == "project") {
-            nDiv = DOMcontrol.placeholderGen(nName, nDue, nID, template)
+            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID)
             DOMcontrol.appendProject(nDiv)
         } else {
-            nDiv = DOMcontrol.placeholderGen(nName, nDue, nID, template, nNotes)
+            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID, nNotes)
             DOMcontrol.appendTask(nDiv)
         }
-        
+
     }
 
     function setActiveProject(projID) {
@@ -106,11 +106,11 @@ const appControl = (() => {
 
     function formToObject(template) {
 
-        let form = DOMcontrol.getFormInput(template)       
+        let form = DOMcontrol.getFormInput(template)
 
         if (!document.querySelector(`[name="${template}-notes"]`)) {
             appControl.createNewProject(form.nameInput, form.dueInput, form.priorityInput)
-        } else {            
+        } else {
             let activeProject = lookupProject(getActiveProject())
             appControl.createNewTask(activeProject.tasks, form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
         }
@@ -119,7 +119,7 @@ const appControl = (() => {
     return {
         genDefaultProject,
         genDefaultTask,
-        projectLoader,        
+        projectLoader,
         storageCheck,
         createNewProject,
         newProjectDisplayController,

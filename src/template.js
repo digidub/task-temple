@@ -162,7 +162,7 @@ const Template = (() => {
         ]
     }
 
-    const projectPlaceholder = (projectName, projectDue, projectID) => {
+    const projectPlaceholder = (projectName, projectDue="", projectPriority, projectID) => {
         return {
             tag: "div",
             classes: ["project-placeholder"],
@@ -186,13 +186,24 @@ const Template = (() => {
                 },
                 {
                     tag: "div",
+                    classes: ["project-priority"],
+                    children: [
+                        {
+                            tag: "img",
+                            classes: ["project-piority-icon"],
+                            src: `${projectPriority.toLowerCase()}.svg`
+                        },
+                    ]
+                },
+                {
+                    tag: "div",
                     classes: ["project-edit"],
                     children: [
                         {
                             tag: "img",
-                            classes: ["project-edit-icon"],                            
+                            classes: ["project-edit-icon"],
                             src: "edit.svg"
-                        },                        
+                        },
                     ]
                 },
 
@@ -201,7 +212,7 @@ const Template = (() => {
         }
     }
 
-    const taskPlaceholder = (taskName, taskDue, taskID, taskNotes) => {
+    const taskPlaceholder = (taskName, taskDue="", taskPriority, taskID, taskNotes) => {
         return {
             tag: "div",
             classes: ["task-placeholder"],
@@ -209,22 +220,64 @@ const Template = (() => {
             children: [
                 {
                     tag: "div",
-                    classes: ["task-name"],
-                    content: taskName,
+                    classes: ["task-status"],
+                    children: [
+                        {
+                            tag: "input",
+                            type: "checkbox",
+                        }
+                    ]
                 },
                 {
                     tag: "div",
-                    classes: ["task-notes"],
-                    content: taskNotes,
+                    classes: ["task-name-due-notes"],
+                    children: [
+                        {
+                            tag: "div",
+                            classes: ["task-name-due"],
+                            children: [
+                                {
+                                    tag: "div",
+                                    classes: ["task-name"],
+                                    content: taskName,
+                                },
+                                {
+                                    tag: "div",
+                                    classes: ["task-due"],
+                                    content: taskDue,
+                                }
+                            ]
+                        },
+                        {
+                            tag: "div",
+                            classes: ["task-notes"],
+                            content: taskNotes
+                        }
+                    ]
                 },
                 {
                     tag: "div",
-                    classes: ["task-due"],
-                    content: taskDue
-                }
-
+                    classes: ["task-priority"],
+                    children: [
+                        {
+                            tag: "img",
+                            classes: ["task-priority-icon"],
+                            src: `${taskPriority.toLowerCase()}.svg`
+                        }
+                    ]
+                },
+                {
+                    tag: "div",
+                    classes: ["task-edit"],
+                    children: [
+                        {
+                            tag: "img",
+                            classes: ["task-edit-icon"],
+                            src: "edit.svg"
+                        }
+                    ]
+                },
             ]
-
         }
     }
 
