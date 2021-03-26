@@ -2,6 +2,10 @@
     /*mobile optimisation to go here*/
 }
 
+:root {
+    line-height: 1.2em;
+}
+
 .wrapper {
     margin: auto;
     max-width: 860px;
@@ -12,7 +16,7 @@
     margin-bottom: 20px;
 }
 
-.app-view {    
+.app-view {
     display: flex;
     flex-direction: row;
     border: 1px solid #ccc;
@@ -25,9 +29,8 @@
 }
 
 .add-button {
-    margin: 5px;    
+    margin: 5px;
 }
-
 
 .project-view {
     margin: 5px 0px 5px 20px;
@@ -46,7 +49,34 @@ h3 {
 
 .project-placeholder {
     margin: 10px 0px 10px 0px;
+    display: grid;
+    grid-template-columns: 80% 10% 10%;
+}
+
+.project-due {
+    height: 1.2em;
+}
+
+.task-placeholder {
+    display: grid;
+    grid-template-columns: 5% 85% 5% 5%;
+}
+
+.task-name-due-notes {
+    padding: 0px 10px 0px 0px;
+}
+
+.task-name-due {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
+
+.task-notes {
+    max-height: 1.2em;
+    overflow: hidden;
+}
+
+.task-notes-expanded {
+    max-height: auto;
 }
