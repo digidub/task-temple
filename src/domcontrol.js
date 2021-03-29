@@ -30,23 +30,49 @@ const DOMcontrol = (() => {
     }
 
     function editProject(e) {
-        let editName = e.target.parentNode.previousElementSibling.querySelector(".project-name")
-        let editDueDiv = e.target.parentNode.previousElementSibling.querySelector(".project-due")
+        let editName = e.target.parentNode.parentNode.querySelector(".project-name")
+        let editDueDiv = e.target.parentNode.parentNode.querySelector(".project-due")
+        let editPlaceholder = e.target.parentNode.parentNode
+        editPlaceholder.classList.toggle("project-placeholder-edit")
+        let editIconDiv = e.target.parentNode
         let editDue = editDueDiv.innerText
-        console.log(editDue)
+        let projectID = e.target.parentNode.parentNode.id
+        let editProject = appControl.lookupProject(projectID)
+
         editDueDiv.innerHTML=`<input type="date" name="project-due" id="edit-date">`
-        let editFormDiv = e.target.parentNode.previousElementSibling.querySelector("#edit-date")
+        let editFormDiv = e.target.parentNode.parentNode.querySelector("#edit-date")
         editFormDiv.value = editDue
         editName.setAttribute('contenteditable', 'true');
         editName.focus();
-        let val = editName.innerText
-        editName.innerText = ""
-        editName.innerText = val
+
+
+
+        //let deleteOrSave = ObjectToDOM.gen(Template.ProjectEdit)
+
+        editIconDiv.appendChild(deleteOrSave)
+        let saveButton = e.target.parentNode.parentNode.querySelector(".delete-icon")
+        saveButton.onclick = saveChanges(editName.value, editFormDiv.value);
     }
 
-    function editPriority() {
+    function saveChanges() {
 
     }
+
+    function removeEditIcon(element) {
+        element.classList.add("project-edit-icon-hidden")
+        element.classList.remove("project-edit-icon")
+    }
+
+    //function editPriority(priority) {
+    //    switch (priority) {
+    //        case "normal":
+    //            
+    //            break;
+    //    
+    //        default:
+    //            break;
+    //    }
+    //}
 
     function placeholderGen(template, name, due, priority, ID, notes) {
         let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes)

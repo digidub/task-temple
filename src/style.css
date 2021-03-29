@@ -8,7 +8,7 @@
 
 .wrapper {
     margin: auto;
-    max-width: 860px;
+    max-width: 950px;
 }
 
 .header {
@@ -50,7 +50,25 @@ h3 {
 .project-placeholder {
     margin: 10px 0px 10px 0px;
     display: grid;
-    grid-template-columns: 80% 10% 10%;
+    grid-template-columns: 80% 10% 10% 0%;
+    overflow: hidden;
+    transition: all 0.1s;
+}
+
+.project-placeholder-edit {
+    margin: 10px 0px 10px 0px;
+    display: grid;
+    grid-template-columns: 70% 10% 0% 20%;
+    transition: all 0.1s;
+}
+
+.project-edit {
+    overflow: hidden;
+}
+
+.edit-delete-save {
+    display: flex;
+    flex-direction: row;
 }
 
 .project-due {

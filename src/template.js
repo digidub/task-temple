@@ -162,7 +162,7 @@ const Template = (() => {
         ]
     }
 
-    const projectPlaceholder = (projectName, projectDue="", projectPriority, projectID) => {
+    const projectPlaceholder = (projectName, projectDue = "", projectPriority, projectID) => {
         return {
             tag: "div",
             classes: ["project-placeholder"],
@@ -206,13 +206,41 @@ const Template = (() => {
                         },
                     ]
                 },
+                {
+                    tag: "div",
+                    classes: ["edit-delete-save"],
+                    children: [
+                        {
+                            tag: "div",
+                            classes: ["edit-delete"],
+                            children: [
+                                {
+                                    tag: "img",
+                                    classes: ["delete-icon"],
+                                    src: "delete.svg",
+                                }
+                            ]
+                        },
+                        {
+                            tag: "div",
+                            classes: ["edit-save"],
+                            children: [
+                                {
+                                    tag: "img",
+                                    classes: ["save-icon"],
+                                    src: "save.svg",
+                                }
+                            ]
+                        }
+                    ]
+                },
 
             ]
 
         }
     }
 
-    const taskPlaceholder = (taskName, taskDue="", taskPriority, taskID, taskNotes) => {
+    const taskPlaceholder = (taskName, taskDue = "", taskPriority, taskID, taskNotes) => {
         return {
             tag: "div",
             classes: ["task-placeholder"],
@@ -281,11 +309,41 @@ const Template = (() => {
         }
     }
 
+    const ProjectEdit = {
+        tag: "div",
+        classes: ["edit-delete-save"],
+        children: [
+            {
+                tag: "div",
+                classes: ["edit-delete"],
+                children: [
+                    {
+                        tag: "img",
+                        classes: ["delete-icon"],
+                        src: "delete.svg",
+                    }
+                ]
+            },
+            {
+                tag: "div",
+                classes: ["edit-save"],
+                children: [
+                    {
+                        tag: "img",
+                        classes: ["save-icon"],
+                        src: "save.svg",
+                    }
+                ]
+            }
+        ]
+    }
+
     return {
         projectPlaceholder,
         taskPlaceholder,
         project,
         task,
+        ProjectEdit,
     }
 
 })();
