@@ -190,7 +190,7 @@ const Template = (() => {
                     children: [
                         {
                             tag: "img",
-                            classes: ["project-piority-icon"],
+                            classes: ["project-priority-icon"],
                             src: `${projectPriority.toLowerCase()}.svg`
                         },
                     ]
