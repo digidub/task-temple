@@ -32,43 +32,39 @@ const DOMcontrol = (() => {
     function editProject(e) {
         let editName = e.target.parentNode.parentNode.querySelector(".project-name")
         let editDueDiv = e.target.parentNode.parentNode.querySelector(".project-due")
+        console.log(editDueDiv) //works
         let editPlaceholder = e.target.parentNode.parentNode
         editPlaceholder.classList.toggle("project-placeholder-edit")
-        let editIconDiv = e.target.parentNode
         let editDue = editDueDiv.innerText
         let projectID = e.target.parentNode.parentNode.id
         let editProject = appControl.lookupProject(projectID)
-
-        editDueDiv.innerHTML=`<input type="date" name="project-due" id="edit-date">`
+        editDueDiv.innerHTML = `<input type="date" name="project-due" id="edit-date">`
         let editFormDiv = e.target.parentNode.parentNode.querySelector("#edit-date")
         editFormDiv.value = editDue
         editName.setAttribute('contenteditable', 'true');
         editName.focus();
-
-
-
-        //let deleteOrSave = ObjectToDOM.gen(Template.ProjectEdit)
-
-        editIconDiv.appendChild(deleteOrSave)
-        let saveButton = e.target.parentNode.parentNode.querySelector(".delete-icon")
-        saveButton.onclick = saveChanges(editName.value, editFormDiv.value);
+        let saveButton = e.target.parentNode.parentNode.querySelector(".save-icon")
+        saveButton.onclick = function() {
+            saveChanges(editProject, editName.value, editFormDiv.value, editName, editDueDiv, editPlaceholder)
+        }
     }
 
-    function saveChanges() {
-
-    }
-
-    function removeEditIcon(element) {
-        element.classList.add("project-edit-icon-hidden")
-        element.classList.remove("project-edit-icon")
+    function saveChanges(project, editedName, editedDueDate, editName, editDueDiv, editPlaceholder) {
+        if (editedDueDate.length > 0) editDueDiv.innerText = editedDueDate
+        else editDueDiv.innerText = "";
+        editName.setAttribute('contenteditable', 'false');
+        project.editName(editedName)
+        project.editDue(editedDueDate)
+        editPlaceholder.classList.toggle("project-placeholder-edit")
+        console.log(project)
     }
 
     //function editPriority(priority) {
     //    switch (priority) {
     //        case "normal":
-    //            
+    //
     //            break;
-    //    
+    //
     //        default:
     //            break;
     //    }
