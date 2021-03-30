@@ -110,6 +110,16 @@ const appControl = (() => {
         return lookupIndex
     }
 
+    function lookupTask(activeProject, id) {
+        let lookup = activeProject.tasks.find(obj => obj.getID() == id)
+    }
+
+    function lookupTaskIndex(activeProject, id) {
+        let idInt = parseInt(id, 10)
+        let lookupIndex = activeProject.findIndex(obj => obj.getID() === idInt)
+        return lookupIndex
+    }
+
     function formToObject(template) {
 
         let form = DOMcontrol.getFormInput(template)
@@ -135,6 +145,8 @@ const appControl = (() => {
         setActiveProject,
         getActiveProject,
         lookupProjectIndex,
+        lookupTask,
+        lookupTaskIndex,
     }
 
 })();
