@@ -29,7 +29,13 @@ const DOMcontrol = (() => {
         })
     }
 
+    function checkObjectType(e) {
+        if (e.target.classList.includes("project")) return "project"
+        else return "task"
+    }
+
     function editProject(e) {
+        let objectType = checkObjectType(e)
         let editName = e.target.parentNode.parentNode.querySelector(".project-name")
         let editDueDiv = e.target.parentNode.parentNode.querySelector(".project-due")
         let editPlaceholder = e.target.parentNode.parentNode
@@ -57,7 +63,7 @@ const DOMcontrol = (() => {
             editProject.editPriority(newPriority)
         }
 
-        let deleteButton = e.target.parentNode.parentNode.querySelector(".delete-icon")
+        let deleteButton = e.target.parentNode.parentNode.querySelector(".project-delete-icon")
         deleteButton.addEventListener('click', deleteController)
 
         function deleteController() {
@@ -66,7 +72,7 @@ const DOMcontrol = (() => {
             editPlaceholder.remove()
         }
 
-        let saveButton = e.target.parentNode.parentNode.querySelector(".save-icon")
+        let saveButton = e.target.parentNode.parentNode.querySelector(".project-save-icon")
         saveButton.onclick = function () {
             saveChanges(editProject, editName.innerText, editDueForm.value, editName, editDueDiv, editPlaceholder)
             priorityButton.removeEventListener('click', priorityController)
@@ -125,6 +131,9 @@ const DOMcontrol = (() => {
                 toExpand.classList.remove("task-notes")
                 toExpand.classList.add("task-notes-expanded")
             }
+        }
+        else if (e.target.className === "task-edit-icon") {
+            console.log(e)
         }
     }
 
