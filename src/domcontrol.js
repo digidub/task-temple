@@ -32,21 +32,46 @@ const DOMcontrol = (() => {
     function editProject(e) {
         let editName = e.target.parentNode.parentNode.querySelector(".project-name")
         let editDueDiv = e.target.parentNode.parentNode.querySelector(".project-due")
-        console.log(editDueDiv) //works
         let editPlaceholder = e.target.parentNode.parentNode
         editPlaceholder.classList.toggle("project-placeholder-edit")
         let editDue = editDueDiv.innerText
         let projectID = e.target.parentNode.parentNode.id
         let editProject = appControl.lookupProject(projectID)
-        editDueDiv.innerHTML = `<input type="date" name="project-due" id="edit-date">`
-        let editFormDiv = e.target.parentNode.parentNode.querySelector("#edit-date")
-        editFormDiv.value = editDue
+        editDueDiv.innerHTML = `<input type="date" name="project-due" id="edit-date"> <button id="clear-date">X</button>`
+        let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
+        let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
+        editDueForm.value = editDue
         editName.setAttribute('contenteditable', 'true');
         editName.focus();
-        let saveButton = e.target.parentNode.parentNode.querySelector(".save-icon")
-        saveButton.onclick = function() {
-            saveChanges(editProject, editName.value, editFormDiv.value, editName, editDueDiv, editPlaceholder)
+        clearDateDiv.onclick = function () {
+            editDueForm.value = ""
         }
+
+        let priorityButton = e.target.parentNode.parentNode.querySelector(".project-priority-icon")
+        priorityButton.addEventListener('click', priorityController)
+
+        function priorityController() {
+            let priorityButton = e.target.parentNode.parentNode.querySelector(".project-priority-icon")
+            let newPriority = editPriority(priorityButton.src)
+            priorityButton.src = `${newPriority}.svg`
+            editProject.editPriority(newPriority)
+        }
+
+        let deleteButton = e.target.parentNode.parentNode.querySelector(".delete-icon")
+        deleteButton.addEventListener('click', deleteController)
+
+        function deleteController() {
+            let indexToDelete = appControl.lookupProjectIndex(projectID)
+            appData.projects.splice(indexToDelete, 1)
+            editPlaceholder.remove()
+        }
+
+        let saveButton = e.target.parentNode.parentNode.querySelector(".save-icon")
+        saveButton.onclick = function () {
+            saveChanges(editProject, editName.innerText, editDueForm.value, editName, editDueDiv, editPlaceholder)
+            priorityButton.removeEventListener('click', priorityController)
+        }
+
     }
 
     function saveChanges(project, editedName, editedDueDate, editName, editDueDiv, editPlaceholder) {
@@ -56,19 +81,13 @@ const DOMcontrol = (() => {
         project.editName(editedName)
         project.editDue(editedDueDate)
         editPlaceholder.classList.toggle("project-placeholder-edit")
-        console.log(project)
     }
 
-    //function editPriority(priority) {
-    //    switch (priority) {
-    //        case "normal":
-    //
-    //            break;
-    //
-    //        default:
-    //            break;
-    //    }
-    //}
+    function editPriority(priority) {
+        if (priority.includes("normal")) return "high"
+        else if (priority.includes("high")) return "low"
+        else if (priority.includes("low")) return "normal"
+    }
 
     function placeholderGen(template, name, due, priority, ID, notes) {
         let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes)
