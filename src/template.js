@@ -216,7 +216,7 @@ const Template = (() => {
                             children: [
                                 {
                                     tag: "img",
-                                    classes: ["delete-icon"],
+                                    classes: ["project-delete-icon"],
                                     src: "delete.svg",
                                 }
                             ]
@@ -227,7 +227,7 @@ const Template = (() => {
                             children: [
                                 {
                                     tag: "img",
-                                    classes: ["save-icon"],
+                                    classes: ["project-save-icon"],
                                     src: "save.svg",
                                 }
                             ]
@@ -309,41 +309,11 @@ const Template = (() => {
         }
     }
 
-    const ProjectEdit = {
-        tag: "div",
-        classes: ["edit-delete-save"],
-        children: [
-            {
-                tag: "div",
-                classes: ["edit-delete"],
-                children: [
-                    {
-                        tag: "img",
-                        classes: ["delete-icon"],
-                        src: "delete.svg",
-                    }
-                ]
-            },
-            {
-                tag: "div",
-                classes: ["edit-save"],
-                children: [
-                    {
-                        tag: "img",
-                        classes: ["save-icon"],
-                        src: "save.svg",
-                    }
-                ]
-            }
-        ]
-    }
-
     return {
         projectPlaceholder,
         taskPlaceholder,
         project,
         task,
-        ProjectEdit,
     }
 
 })();
