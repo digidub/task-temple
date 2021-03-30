@@ -1,11 +1,15 @@
+import { appData } from "./appdata";
+import { appControl } from "./appcontrol";
+
 const Task = (taskName, desc, dueDate = null, pri = "normal") => {
 
-    const name = taskName;
+    let name = taskName;
     const notes = desc;
     const created = new Date();
-    const due = dueDate;
-    const completed = 0 //0 == uncompleted, 1 == completed
-    const priority = pri
+    let due = dueDate;
+    let completed = 0 //0 == uncompleted, 1 == completed
+    let priority = pri
+    const id = genID();
 
     function editName(newName) {
         return name = newName
@@ -27,6 +31,10 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         return name;
     }
 
+    function getNotes() {
+        return notes
+    }
+
     function getDue() {
         return due;
     }
@@ -38,22 +46,30 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
     function getID() {
         return id;
     }
-    
-    /* IN ORDER TO HAVE ID FOR TASKS - will need to have logic that passes through the overriding project that creates the task, in order to measure its length.
-    Maybe this could be done by having a property in the task object with the project's name in it. 
-    const id = genID()
 
     function genID() {
-        if (appData.projects.length < 1) {
+        if (appData.projects.length == 1) { //if there is only one project
+            if (appData.projects[0].tasks.length < 1) { //and there is one task
+                let id = 1 //give it an ID of 1
+                return id;
+            }
+            else {
+                let arr = appData.projects[0].tasks;
+                let maxID = Math.max(...arr.map(arr => arr.id));
+                let id = maxID + 1;
+                return id;
+            }
+        }
+        else if (appControl.lookupProject(appControl.getActiveProject()).tasks.length < 1) {
             let id = 1;
             return id;
         } else {
-            let arr = appData.projects;
-            let maxID = Math.max(...array.map(arr => arr.id));
+            let arr = appControl.lookupProject(appControl.getActiveProject()).tasks;
+            let maxID = Math.max(...arr.map(arr => arr.id));
             let id = maxID + 1;
             return id;
         }
-    }*/
+    }
 
     return {
         editName,
@@ -61,6 +77,7 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         editDue,
         editPriority,
         getName,
+        getNotes,
         getDue,
         getPriority,
         getID,
