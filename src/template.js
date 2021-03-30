@@ -305,6 +305,34 @@ const Template = (() => {
                         }
                     ]
                 },
+                {
+                    tag: "div",
+                    classes: ["edit-delete-save"],
+                    children: [
+                        {
+                            tag: "div",
+                            classes: ["edit-delete"],
+                            children: [
+                                {
+                                    tag: "img",
+                                    classes: ["task-delete-icon"],
+                                    src: "delete.svg",
+                                }
+                            ]
+                        },
+                        {
+                            tag: "div",
+                            classes: ["edit-save"],
+                            children: [
+                                {
+                                    tag: "img",
+                                    classes: ["task-save-icon"],
+                                    src: "save.svg",
+                                }
+                            ]
+                        }
+                    ]
+                },
             ]
         }
     }
