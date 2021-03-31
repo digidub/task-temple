@@ -102,8 +102,11 @@ const appControl = (() => {
     function switchIDByIndex(index) {
         if (appData.projects.length === 0) return 0;
         if (appData.projects.length === 1) return appData.projects[0].getID();
-        if (appData.projects[index] === appData.projects[0]) return appData.projects[1].getID();
-        else return appData.projects[index-1].getID();
+        if (appData.projects[index] == appData.projects[0]) {
+            console.log(appData.projects[index])
+            return appData.projects[1].getID();
+        }
+        else return appData.projects[index - 1].getID();
     }
 
     function lookupProject(id) {
