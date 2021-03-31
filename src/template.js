@@ -252,6 +252,7 @@ const Template = (() => {
                     children: [
                         {
                             tag: "input",
+                            classes: ["task-completed"],
                             type: "checkbox",
                         }
                     ]
