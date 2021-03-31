@@ -21,6 +21,7 @@ const DOMcontrol = (() => {
     }
 
     const displayTasks = (projectID) => {
+        console.log(projectID)
         taskViewList.innerHTML = "";
         if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
@@ -87,7 +88,6 @@ const DOMcontrol = (() => {
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
 
-        console.log(editDue)
         editDueForm.value = editDue
 
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
@@ -110,7 +110,7 @@ const DOMcontrol = (() => {
         })
 
         editing.deleteButton.addEventListener('click', () => {
-            deleteController(objectType, editing.placeholder, activeProject)
+            appControl.deleteController(objectType, editing.placeholder, activeProject, editing.id)
         })
 
         editing.saveButton.onclick = function () {
@@ -118,18 +118,6 @@ const DOMcontrol = (() => {
             editing.priorityButton.removeEventListener('click', priorityController)
         }
 
-    }
-
-    function deleteController(objectType, editPlaceholder, activeProject) {
-        if (objectType === "project") {
-            let indexToDelete = appControl.lookupProjectIndex(editingID)
-            appData.projects.splice(indexToDelete, 1)
-        }
-        else {
-            let indexToDelete = appControl.lookupTaskIndex(activeProject, editingID)
-            activeProject.tasks.splice(indexToDelete, 1)
-        }
-        editPlaceholder.remove()
     }
 
     function saveChanges(objectType, objectBeingEdited, editedName, editedDueDate, editName, editDueDiv, editPlaceholder, editNotes) {
@@ -169,13 +157,13 @@ const DOMcontrol = (() => {
     }
 
     projectViewList.onclick = function (e) {
-        if (e.target.className == "project-name") {
+        if (e.target.className === "project-name" || e.target.className === "project-edit-icon") {
             let projID = e.target.parentNode.parentNode.id
             displayTasks(projID)
             appControl.setActiveProject(projID)
-        }
-        else if (e.target.className == "project-edit-icon") {
-            editProject(e)
+            if (e.target.className == "project-edit-icon") {
+                editProject(e)
+            }
         }
     }
 

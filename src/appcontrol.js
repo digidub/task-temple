@@ -61,7 +61,7 @@ const appControl = (() => {
         newProjectDisplayController(appData.projects, "project");
     }
 
-    const createNewTask = (proj, name, notes="", due, priority) => {
+    const createNewTask = (proj, name, notes = "", due, priority) => {
         let newTask = Task(name, notes, due, priority)
         pushObj(proj, newTask)
         newProjectDisplayController(proj, "task");
@@ -99,6 +99,13 @@ const appControl = (() => {
         return appData.getActiveProject()
     }
 
+    function switchIDByIndex(index) {
+        if (appData.projects.length === 0) return 0;
+        if (appData.projects.length === 1) return appData.projects[0].getID();
+        if (appData.projects[index] === appData.projects[0]) return appData.projects[1].getID();
+        else return appData.projects[index-1].getID();
+    }
+
     function lookupProject(id) {
         let lookup = appData.projects.find(obj => obj.getID() == id)
         return lookup;
@@ -112,11 +119,12 @@ const appControl = (() => {
 
     function lookupTask(activeProject, id) {
         let lookup = activeProject.tasks.find(obj => obj.getID() == id)
+        return lookup
     }
 
     function lookupTaskIndex(activeProject, id) {
         let idInt = parseInt(id, 10)
-        let lookupIndex = activeProject.findIndex(obj => obj.getID() === idInt)
+        let lookupIndex = activeProject.tasks.findIndex(obj => obj.getID() === idInt)
         return lookupIndex
     }
 
@@ -130,6 +138,27 @@ const appControl = (() => {
             let activeProject = lookupProject(getActiveProject())
             appControl.createNewTask(activeProject.tasks, form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
         }
+    }
+
+    function deleteController(objectType, objectPlaceholder, activeProject, objectID) {
+
+        if (objectType === "project") {
+            let indexToDelete = lookupProjectIndex(objectID)
+            switchActiveProject(indexToDelete)
+            DOMcontrol.displayTasks(getActiveProject())
+            appData.projects.splice(indexToDelete, 1)
+        }
+        else {
+            let indexToDelete = lookupTaskIndex(activeProject, objectID)
+            activeProject.tasks.splice(indexToDelete, 1)
+        }
+        objectPlaceholder.remove()
+    }
+
+    function switchActiveProject(index) {
+        let newID = switchIDByIndex(index)
+        if (newID === 0) return;
+        setActiveProject(newID)
     }
 
     return {
@@ -147,6 +176,7 @@ const appControl = (() => {
         lookupProjectIndex,
         lookupTask,
         lookupTaskIndex,
+        deleteController,
     }
 
 })();
