@@ -30,63 +30,95 @@ const DOMcontrol = (() => {
     }
 
     function checkObjectType(e) {
-        if (e.target.classList.includes("project")) return "project"
+        if (e.target.classList.contains("project-edit-icon")) return "project"
         else return "task"
+    }
+    //finds the actual object that is being edited so that it's methods can be used to edit the object properties 
+    function activeEditingObject(type, editingID) {
+        if (type === "project") return appControl.lookupProject(editingID)
+        else {
+            let activeProject = appControl.lookupProject(appControl.getActiveProject())
+            return appControl.lookupTask(activeProject, editingID)
+        }
     }
 
     function editProject(e) {
+        //check whether project or task
         let objectType = checkObjectType(e)
-        let editName = e.target.parentNode.parentNode.querySelector(".project-name")
-        let editDueDiv = e.target.parentNode.parentNode.querySelector(".project-due")
+
+        //dom identifiers
         let editPlaceholder = e.target.parentNode.parentNode
-        editPlaceholder.classList.toggle("project-placeholder-edit")
-        let editDue = editDueDiv.innerText
-        let projectID = e.target.parentNode.parentNode.id
-        let editProject = appControl.lookupProject(projectID)
-        editDueDiv.innerHTML = `<input type="date" name="project-due" id="edit-date"> <button id="clear-date">X</button>`
+        editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
+        let editName = e.target.parentNode.parentNode.querySelector(`.${objectType}-name`)
+        let editDueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
+        editDueDiv.innerHTML = `<input type="date" name="${objectType}-due" id="edit-date"> <button id="clear-date">X</button>`
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
+        let editDue = editDueDiv.innerText
+        let editingID = e.target.parentNode.parentNode.id
+        let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
         editDueForm.value = editDue
+
+
         editName.setAttribute('contenteditable', 'true');
         editName.focus();
+
+        if (e.target.parentNode.parentNode.querySelector(`.task-notes`) || e.target.parentNode.parentNode.querySelector(`.task-notes-expanded`)) {
+            let editNotes = e.target.parentNode.parentNode.querySelector(`.task-notes`) || e.target.parentNode.parentNode.querySelector(`.task-notes-expanded`)
+            if (e.target.parentNode.parentNode.querySelector(`.task-notes`)) {
+                editNotes.classList.toggle("task-notes-expanded")
+                editNotes.classList.toggle("task-notes")
+            }
+            editNotes.setAttribute('contenteditable', 'true');
+        }
+
+        //find active project and locate actual object being edited
+        let actualObjectBeingEdited = activeEditingObject(objectType, editingID)
+        let activeProject = appControl.lookupProject(appControl.getActiveProject())
+
         clearDateDiv.onclick = function () {
             editDueForm.value = ""
         }
 
-        let priorityButton = e.target.parentNode.parentNode.querySelector(".project-priority-icon")
         priorityButton.addEventListener('click', priorityController)
 
         function priorityController() {
-            let priorityButton = e.target.parentNode.parentNode.querySelector(".project-priority-icon")
             let newPriority = editPriority(priorityButton.src)
             priorityButton.src = `${newPriority}.svg`
-            editProject.editPriority(newPriority)
+            actualObjectBeingEdited.editPriority(newPriority)
         }
 
-        let deleteButton = e.target.parentNode.parentNode.querySelector(".project-delete-icon")
+        let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
         deleteButton.addEventListener('click', deleteController)
 
         function deleteController() {
-            let indexToDelete = appControl.lookupProjectIndex(projectID)
-            appData.projects.splice(indexToDelete, 1)
+            if (objectType === "project") {
+                let indexToDelete = appControl.lookupProjectIndex(editingID)
+                appData.projects.splice(indexToDelete, 1)
+            }
+            else {
+                let indexToDelete = appControl.lookupTaskIndex(activeProject, editingID)
+                activeProject.tasks.splice(indexToDelete, 1)
+            }
             editPlaceholder.remove()
         }
 
-        let saveButton = e.target.parentNode.parentNode.querySelector(".project-save-icon")
+        let saveButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-save-icon`)
         saveButton.onclick = function () {
-            saveChanges(editProject, editName.innerText, editDueForm.value, editName, editDueDiv, editPlaceholder)
+            saveChanges(objectType, actualObjectBeingEdited, editName.innerText, editDueForm.value, editName, editDueDiv, editPlaceholder, editNotes)
             priorityButton.removeEventListener('click', priorityController)
         }
 
     }
 
-    function saveChanges(project, editedName, editedDueDate, editName, editDueDiv, editPlaceholder) {
+    function saveChanges(objectType, objectBeingEdited, editedName, editedDueDate, editName, editDueDiv, editPlaceholder, editNotes) {
         if (editedDueDate.length > 0) editDueDiv.innerText = editedDueDate
         else editDueDiv.innerText = "";
         editName.setAttribute('contenteditable', 'false');
-        project.editName(editedName)
-        project.editDue(editedDueDate)
-        editPlaceholder.classList.toggle("project-placeholder-edit")
+        if (editNotes) editNotes.setAttribute('contenteditable', 'false');
+        objectBeingEdited.editName(editedName)
+        objectBeingEdited.editDue(editedDueDate)
+        editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
     }
 
     function editPriority(priority) {
@@ -121,19 +153,13 @@ const DOMcontrol = (() => {
     }
 
     taskViewList.onclick = function (e) {
-        if (e.target.className == "task-notes" || e.target.className == "task-notes-expanded") {
+        if ((e.target.className == "task-notes" || e.target.className == "task-notes-expanded") && (!e.target.parentNode.parentNode.classList.contains("task-placeholder-edit"))) {
             let toExpand = e.target
-            if (toExpand.classList.contains("task-notes-expanded")) {
-                toExpand.classList.remove("task-notes-expanded")
-                toExpand.classList.add("task-notes")
-            }
-            else {
-                toExpand.classList.remove("task-notes")
-                toExpand.classList.add("task-notes-expanded")
-            }
+            toExpand.classList.toggle("task-notes-expanded")
+            toExpand.classList.toggle("task-notes")
         }
         else if (e.target.className === "task-edit-icon") {
-            console.log(e)
+            editProject(e)
         }
     }
 
