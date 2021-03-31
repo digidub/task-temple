@@ -21,7 +21,6 @@ const DOMcontrol = (() => {
     }
 
     const displayTasks = (projectID) => {
-        console.log(projectID)
         taskViewList.innerHTML = "";
         if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
@@ -175,6 +174,11 @@ const DOMcontrol = (() => {
         }
         else if (e.target.className === "task-edit-icon") {
             editProject(e)
+        }
+        else if (e.target.className === "task-completed") {
+            let taskID = e.target.parentNode.parentNode.id
+            //let tickbox = e.target
+            appControl.completedController(taskID)
         }
     }
 

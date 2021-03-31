@@ -164,6 +164,12 @@ const appControl = (() => {
         setActiveProject(newID)
     }
 
+    function completedController(id) {
+        let activeProject = lookupProject(getActiveProject())
+        let activeTask = lookupTask(activeProject, id)
+        activeTask.toggleCompleted()
+    }
+
     return {
         genDefaultProject,
         genDefaultTask,
@@ -180,6 +186,7 @@ const appControl = (() => {
         lookupTask,
         lookupTaskIndex,
         deleteController,
+        completedController,
     }
 
 })();
