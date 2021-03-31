@@ -47,6 +47,15 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         return id;
     }
 
+    function getCompleted() {
+        return completed;
+    }
+
+    function toggleCompleted() {
+        if (completed === 0) return completed = 1
+        else return completed = 0
+    }
+
     function genID() {
         if (appData.projects.length == 1) { //if there is only one project
             if (appData.projects[0].tasks.length < 1) { //and there is one task
@@ -80,7 +89,10 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         getNotes,
         getDue,
         getPriority,
+        getCompleted,
         getID,
+        toggleCompleted,
+
     }
 }
 
