@@ -52,8 +52,13 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
     }
 
     function toggleCompleted() {
-        if (completed === 0) return completed = 1
-        else return completed = 0
+        if (completed === 0) {
+            completed = 1
+        }
+        else {
+            completed = 0
+        }
+        return completed
     }
 
     function genID() {
