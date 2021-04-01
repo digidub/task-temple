@@ -7,7 +7,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
     let due = dueDate;
     const tasks = [];
     let completed = 0; //0 == uncompleted, 100 == completed
-    let priority = pri    
+    let priority = pri
     const id = genID()
 
     function editName(newName) {
@@ -36,7 +36,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
 
     function getID() {
         return id;
-    }    
+    }
 
     function genID() {
         if (appData.projects.length < 1) {
@@ -46,26 +46,28 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             let arr = appData.projects;
             let maxID = Math.max(...arr.map(arr => arr.getID()));
             let id = maxID + 1;
-            console.log(id)
             return id;
-           
         }
     }
 
-    function updateProgress() {           
+    function updateProgress() {
         let totalTasks = tasks.length
-        if (totalTasks > 1) return completed = 0;
+        if (totalTasks === 0) return completed = 0;
         let tasksComplete = 0
         for (let i = 0; i < totalTasks; i++) {
-            if (tasks[i].completed === 1) {
+            if (tasks[i].getCompleted() === 1) {
                 tasksComplete++
-            }            
+            }
         }
         let ratio = tasksComplete / totalTasks
         let progress = ratio * 100
         return completed = progress
     }
 
+    function getProgress() {
+        updateProgress()
+        return completed;
+    }
 
     return {
         tasks,
@@ -76,7 +78,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
         getDue,
         getPriority,
         getID,
-        updateProgress,        
+        getProgress,
     }
 
 }
