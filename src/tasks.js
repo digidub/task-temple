@@ -58,7 +58,6 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         else {
             completed = 0
         }
-        return completed
     }
 
     function genID() {
