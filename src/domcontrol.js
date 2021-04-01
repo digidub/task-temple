@@ -24,7 +24,7 @@ const DOMcontrol = (() => {
         taskViewList.innerHTML = "";
         if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
-            let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getID(), task.getNotes())
+            let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getID(), task.getNotes(), task.getCompleted())
             taskViewList.appendChild(taskDiv)
         })
     }
@@ -69,7 +69,7 @@ const DOMcontrol = (() => {
         let notes = checkWhetherEditNotes(e)
         let dueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
         let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
-        let id = e.target.parentNode.parentNode.id
+        let id = e.target.parentNode.parentNode.getAttribute(`data-${object}-id`)
         let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
         let saveButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-save-icon`)
         return { placeholder, name, notes, dueDiv, priorityButton, deleteButton, saveButton, id }
@@ -141,8 +141,8 @@ const DOMcontrol = (() => {
         else if (priority.includes("low")) return "normal"
     }
 
-    function placeholderGen(template, name, due, priority, ID, notes) {
-        let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes)
+    function placeholderGen(template, name, due, priority, ID, notes, completed) {
+        let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes, completed)
         let placeholder = ObjectToDOM.gen(placeholderTemplate)
         return placeholder;
     }
@@ -157,7 +157,7 @@ const DOMcontrol = (() => {
 
     projectViewList.onclick = function (e) {
         if (e.target.className === "project-name" || e.target.className === "project-edit-icon") {
-            let projID = e.target.parentNode.parentNode.id
+            let projID = e.target.parentNode.parentNode.getAttribute(`data-project-id`)
             displayTasks(projID)
             appControl.setActiveProject(projID)
             if (e.target.className == "project-edit-icon") {
@@ -176,8 +176,7 @@ const DOMcontrol = (() => {
             editProject(e)
         }
         else if (e.target.className === "task-completed") {
-            let taskID = e.target.parentNode.parentNode.id
-            //let tickbox = e.target
+            let taskID = e.target.parentNode.parentNode.getAttribute(`data-task-id`)
             appControl.completedController(taskID)
         }
     }
@@ -206,7 +205,7 @@ const DOMcontrol = (() => {
         let submit = document.querySelector(`.${template}-submit`)
         submit.onclick = function (e) {
             e.preventDefault()
-            appControl.formToObject(template)
+            appControl.addObjectController(template)
             document.querySelector(`.${template}-form`).reset();
         }
     }
@@ -235,6 +234,11 @@ const DOMcontrol = (() => {
 
     }
 
+    function progressPaint(id, progress) {
+        let projectPlaceholder = projectViewList.querySelector(`.project-placeholder[data-project-id="${id}"]`)
+        projectPlaceholder.style.background = `linear-gradient(107deg, rgba(218,32,42,1) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
+    }
+
     return {
         displayProjects,
         displayTasks,
@@ -242,6 +246,7 @@ const DOMcontrol = (() => {
         appendTask,
         placeholderGen,
         getFormInput,
+        progressPaint,
     }
 
 

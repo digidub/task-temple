@@ -56,29 +56,20 @@ const appControl = (() => {
     }
 
     const createNewProject = (name, due, priority) => {
-        let newProject = Project(name, due, priority)
-        pushObj(appData.projects, newProject)
-        newProjectDisplayController(appData.projects, "project");
+        return Project(name, due, priority)
     }
 
     const createNewTask = (proj, name, notes = "", due, priority) => {
-        let newTask = Task(name, notes, due, priority)
-        pushObj(proj, newTask)
-        newProjectDisplayController(proj, "task");
+        return Task(name, notes, due, priority)
     }
 
-    const fetchNewestObject = (path) => {
-        let newest = path[path.length - 1]
-        return newest
-    }
-
-    const newProjectDisplayController = (target, template) => {
+    const newObjectDisplayController = (target, template) => {
         let newest = fetchNewestObject(target)
         let nName = newest.getName()
         let nNotes;
         if (template == "task") nNotes = newest.getNotes()
         let nDue = newest.getDue()
-        let nPriority = newest.getPriority() //need to include follow on logic for this later
+        let nPriority = newest.getPriority()
         let nID = newest.getID()
         let nDiv;
         if (template == "project") {
@@ -87,14 +78,20 @@ const appControl = (() => {
         } else {
             nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID, nNotes)
             DOMcontrol.appendTask(nDiv)
+            return nID
         }
+    }
 
+    const fetchNewestObject = (path) => {
+        let newest = path[path.length - 1]
+        return newest
     }
 
     function setActiveProject(projID) {
         appData.setActiveProject(projID)
     }
 
+    //returns ID of active project
     function getActiveProject() {
         return appData.getActiveProject()
     }
@@ -103,12 +100,12 @@ const appControl = (() => {
         if (appData.projects.length === 0) return 0;
         if (appData.projects.length === 1) return appData.projects[0].getID();
         if (appData.projects[index] == appData.projects[0]) {
-            console.log(appData.projects[index])
             return appData.projects[1].getID();
         }
         else return appData.projects[index - 1].getID();
     }
 
+    //returns actual object
     function lookupProject(id) {
         let lookup = appData.projects.find(obj => obj.getID() == id)
         return lookup;
@@ -131,16 +128,26 @@ const appControl = (() => {
         return lookupIndex
     }
 
-    function formToObject(template) {
-
-        let form = DOMcontrol.getFormInput(template)
-
-        if (!document.querySelector(`[name="${template}-notes"]`)) {
-            appControl.createNewProject(form.nameInput, form.dueInput, form.priorityInput)
+    function addObjectController(template) {
+        let form = collectForm(template)
+        let newObj;
+        if (!document.querySelector(`[name="${template}-notes"]`)) { //if there are no notes, implying project rather than task
+            newObj = createNewProject(form.nameInput, form.dueInput, form.priorityInput)
+            pushObj(appData.projects, newObj)
+            newObjectDisplayController(appData.projects, "project");
         } else {
             let activeProject = lookupProject(getActiveProject())
-            appControl.createNewTask(activeProject.tasks, form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
+            newObj = createNewTask(activeProject.tasks, form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
+            pushObj(activeProject.tasks, newObj)
+            newObjectDisplayController(activeProject.tasks, "task");
+            projectProgressBar(activeProject)
         }
+
+    }
+
+    function collectForm (template) {
+        let form = DOMcontrol.getFormInput(template)
+        return form
     }
 
     function deleteController(objectType, objectPlaceholder, activeProject, objectID) {
@@ -168,6 +175,12 @@ const appControl = (() => {
         let activeProject = lookupProject(getActiveProject())
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
+        projectProgressBar(activeProject)
+    }
+
+    function projectProgressBar(activeProject) {
+        let x = activeProject.getProgress()
+        DOMcontrol.progressPaint(getActiveProject(), x)
     }
 
     return {
@@ -175,10 +188,7 @@ const appControl = (() => {
         genDefaultTask,
         projectLoader,
         storageCheck,
-        createNewProject,
-        newProjectDisplayController,
-        createNewTask,
-        formToObject,
+        newObjectDisplayController,
         lookupProject,
         setActiveProject,
         getActiveProject,
@@ -187,6 +197,8 @@ const appControl = (() => {
         lookupTaskIndex,
         deleteController,
         completedController,
+        projectProgressBar,
+        addObjectController,
     }
 
 })();
