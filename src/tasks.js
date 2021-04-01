@@ -60,22 +60,26 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         if (appData.projects.length == 1) { //if there is only one project
             if (appData.projects[0].tasks.length < 1) { //and there is one task
                 let id = 1 //give it an ID of 1
+                console.log(id)
                 return id;
             }
             else {
                 let arr = appData.projects[0].tasks;
-                let maxID = Math.max(...arr.map(arr => arr.id));
+                let maxID = Math.max(...arr.map(arr => arr.getID()));
                 let id = maxID + 1;
+                console.log(id)
                 return id;
             }
         }
         else if (appControl.lookupProject(appControl.getActiveProject()).tasks.length < 1) {
             let id = 1;
             return id;
+            console.log(id)
         } else {
             let arr = appControl.lookupProject(appControl.getActiveProject()).tasks;
-            let maxID = Math.max(...arr.map(arr => arr.id));
+            let maxID = Math.max(...arr.map(arr => arr.getID()));
             let id = maxID + 1;
+            console.log(id)
             return id;
         }
     }
