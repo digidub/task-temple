@@ -1,12 +1,12 @@
 import { appData } from "./appdata";
 
-const Project = (projectName, dueDate = null, pri = "normal") => {
+const Project = (projectName, dueDate = null, pri = "normal", completed = 0) => {
 
     let name = projectName;
     const created = new Date();
     let due = dueDate;
     const tasks = [];
-    let completed = 0; //0 == uncompleted, 100 == completed
+    let completed; //0 == uncompleted, 100 == completed
     let priority = pri
     const id = genID()
 
@@ -34,7 +34,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
         return priority;
     }
 
-    function getID() {
+    function getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
             return id;
         } else {
             let arr = appData.projects;
-            let maxID = Math.max(...arr.map(arr => arr.getID()));
+            let maxID = Math.max(...arr.map(arr => arr.getId()));
             let id = maxID + 1;
             return id;
         }
@@ -69,16 +69,32 @@ const Project = (projectName, dueDate = null, pri = "normal") => {
         return completed;
     }
 
+    function getTasks() {
+        let taskList = []
+        for (let i = 0; i < tasks.length; i++) {
+            let taskObj = { "name": tasks[i].getName(), "notes": tasks[i].getNotes(), "due": tasks[i].getDue(), "priority": tasks[i].getPriority(), "completed": tasks[i].getCompleted(), "id": tasks[i].getId() }
+            taskList.push(taskObj)
+        }
+        return taskList
+    }
+
+    const toString = function () {
+        return { "name": name, "due": due, "priority": priority, "completed": completed, "id": id, "tasks": [tasks.toString()] }
+    }
+
     return {
         tasks,
+        created,
         editDue,
         editName,
         editPriority,
         getName,
         getDue,
         getPriority,
-        getID,
+        getId,
         getProgress,
+        toString,
+        getTasks,
     }
 
 }
