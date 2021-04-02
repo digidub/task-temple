@@ -27,7 +27,6 @@ const appControl = (() => {
 
     const genDefault = () => {
         let dP = genDefaultProject()
-        console.log(dP.toString())
         pushObj(appData.projects, dP)
         let dT = genDefaultTask()
         return { dP, dT }
@@ -178,7 +177,6 @@ const appControl = (() => {
             let string = appData.projects[i].toString()
             stringedProjects.push(string)
         }
-        console.log(stringedProjects)
         return stringedProjects
     }
 

@@ -76,7 +76,6 @@ const Project = (projectName, dueDate = null, pri = "normal", comp = 0) => {
             let taskObj = { "name": tasks[i].getName(), "notes": tasks[i].getNotes(), "due": tasks[i].getDue(), "priority": tasks[i].getPriority(), "completed": tasks[i].getCompleted(), "id": tasks[i].getId() }
             taskList.push(taskObj)
         }
-        console.log(taskList)
         return taskList
     }
 

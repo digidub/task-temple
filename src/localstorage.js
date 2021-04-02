@@ -13,7 +13,6 @@ const lsControl = (() => {
 
     const saveStorage = (name, obj) => {
         localStorage.setItem(name, JSON.stringify(obj))
-        console.log(obj)
     }
 
     const fetchStorage = (obj) => {
