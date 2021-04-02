@@ -1,13 +1,13 @@
 import { appData } from "./appdata";
 import { appControl } from "./appcontrol";
 
-const Task = (taskName, desc, dueDate = null, pri = "normal") => {
+const Task = (taskName, desc, dueDate = null, pri = "normal", completed = 0) => {
 
     let name = taskName;
     const notes = desc;
     const created = new Date();
     let due = dueDate;
-    let completed = 0 //0 == uncompleted, 1 == completed
+    let completedController //0 == uncompleted, 1 == completed
     let priority = pri
     const id = genID();
 
@@ -43,7 +43,7 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         return priority;
     }
 
-    function getID() {
+    function getId() {
         return id;
     }
 
@@ -68,7 +68,7 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
             }
             else {
                 let arr = appData.projects[0].tasks;
-                let maxID = Math.max(...arr.map(arr => arr.getID()));
+                let maxID = Math.max(...arr.map(arr => arr.getId()));
                 let id = maxID + 1;
                 return id;
             }
@@ -78,10 +78,14 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
             return id;
         } else {
             let arr = appControl.lookupProject(appControl.getActiveProject()).tasks;
-            let maxID = Math.max(...arr.map(arr => arr.getID()));
+            let maxID = Math.max(...arr.map(arr => arr.getId()));
             let id = maxID + 1;
             return id;
         }
+    }
+
+    const toString = function () {
+        return { "name": name, "notes": notes, "due": due, "priority": priority, "completed": completed, "id": id }
     }
 
     return {
@@ -94,9 +98,9 @@ const Task = (taskName, desc, dueDate = null, pri = "normal") => {
         getDue,
         getPriority,
         getCompleted,
-        getID,
+        getId,
         toggleCompleted,
-
+        toString,
     }
 }
 
