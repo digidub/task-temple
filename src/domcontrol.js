@@ -15,7 +15,7 @@ const DOMcontrol = (() => {
 
     const displayProjects = () => {
         appData.projects.forEach(project => {
-            let projectDiv = placeholderGen("project", project.getName(), project.getDue(), project.getPriority(), project.getID())
+            let projectDiv = placeholderGen("project", project.getName(), project.getDue(), project.getPriority(), project.getId())
             projectViewList.appendChild(projectDiv);
         })
     }
@@ -24,7 +24,7 @@ const DOMcontrol = (() => {
         taskViewList.innerHTML = "";
         if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
         appControl.lookupProject(projectID).tasks.forEach(task => {
-            let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getID(), task.getNotes(), task.getCompleted())
+            let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getId(), task.getNotes(), task.getCompleted())
             taskViewList.appendChild(taskDiv)
         })
     }
@@ -69,7 +69,7 @@ const DOMcontrol = (() => {
         let notes = checkWhetherEditNotes(e)
         let dueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
         let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
-        let id = e.target.parentNode.parentNode.getAttribute(`data-${object}-id`)
+        let id = e.target.parentNode.parentNode.getAttribute(`data-${objectType}-id`)
         let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
         let saveButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-save-icon`)
         return { placeholder, name, notes, dueDiv, priorityButton, deleteButton, saveButton, id }
@@ -126,6 +126,7 @@ const DOMcontrol = (() => {
         if (editNotes) editNotes.setAttribute('contenteditable', 'false');
         objectBeingEdited.editName(editedName)
         objectBeingEdited.editDue(editedDueDate)
+        appControl.projectSaver('projects', appControl.projectsToString())
         editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
     }
 
@@ -133,6 +134,7 @@ const DOMcontrol = (() => {
         let newPriority = editPriority(priorityButton.src)
         priorityButton.src = `${newPriority}.svg`
         actualObjectBeingEdited.editPriority(newPriority)
+        appControl.projectSaver('projects', appControl.projectsToString())
     }
 
     function editPriority(priority) {
