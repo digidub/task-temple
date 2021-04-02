@@ -7,7 +7,7 @@ const Task = (taskName, desc, dueDate = null, pri = "normal", completed = 0) => 
     const notes = desc;
     const created = new Date();
     let due = dueDate;
-    let completedController //0 == uncompleted, 1 == completed
+    let completed; //0 == uncompleted, 1 == completed
     let priority = pri
     const id = genID();
 
