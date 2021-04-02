@@ -1,15 +1,16 @@
 import { appData } from "./appdata";
 import { appControl } from "./appcontrol";
 
-const Task = (taskName, desc, dueDate = null, pri = "normal", completed = 0) => {
+const Task = (taskName, desc, dueDate = null, pri = "normal", comp = 0) => {
 
     let name = taskName;
     const notes = desc;
     const created = new Date();
     let due = dueDate;
-    let completed; //0 == uncompleted, 1 == completed
+    let completed = comp; //0 == uncompleted, 1 == completed
     let priority = pri
     const id = genID();
+    let stringTask
 
     function editName(newName) {
         return name = newName
@@ -61,7 +62,7 @@ const Task = (taskName, desc, dueDate = null, pri = "normal", completed = 0) => 
     }
 
     function genID() {
-        if (appData.projects.length == 1) { //if there is only one project
+        if (appData.projects.length <= 1) { //if there is only one or less projects
             if (appData.projects[0].tasks.length < 1) { //and there is one task
                 let id = 1 //give it an ID of 1
                 return id;
@@ -84,8 +85,8 @@ const Task = (taskName, desc, dueDate = null, pri = "normal", completed = 0) => 
         }
     }
 
-    const toString = function () {
-        return { "name": name, "notes": notes, "due": due, "priority": priority, "completed": completed, "id": id }
+    function toString() {
+        return stringTask = { "name": name, "notes": notes, "due": due, "priority": priority, "completed": completed, "id": id }
     }
 
     return {

@@ -1,12 +1,13 @@
 import { appData } from "./appdata";
+import { Task } from './tasks'
 
-const Project = (projectName, dueDate = null, pri = "normal", completed = 0) => {
+const Project = (projectName, dueDate = null, pri = "normal", comp = 0) => {
 
     let name = projectName;
     const created = new Date();
     let due = dueDate;
     const tasks = [];
-    let completed; //0 == uncompleted, 100 == completed
+    let completed = comp; //0 == uncompleted, 100 == completed
     let priority = pri
     const id = genID()
 
@@ -75,11 +76,12 @@ const Project = (projectName, dueDate = null, pri = "normal", completed = 0) => 
             let taskObj = { "name": tasks[i].getName(), "notes": tasks[i].getNotes(), "due": tasks[i].getDue(), "priority": tasks[i].getPriority(), "completed": tasks[i].getCompleted(), "id": tasks[i].getId() }
             taskList.push(taskObj)
         }
+        console.log(taskList)
         return taskList
     }
 
-    const toString = function () {
-        return { "name": name, "due": due, "priority": priority, "completed": completed, "id": id, "tasks": [tasks.toString()] }
+    function toString () {
+        return { "name": name, "due": due, "priority": priority, "completed": completed, "tasks": getTasks() }
     }
 
     return {
