@@ -143,6 +143,12 @@ const DOMcontrol = (() => {
         else if (priority.includes("low")) return "normal"
     }
 
+    
+
+    function checkCompleted() {
+
+    }
+
     function placeholderGen(template, name, due, priority, ID, notes, completed) {
         let placeholderTemplate = Template[`${template}Placeholder`](name, due, priority, ID, notes, completed)
         let placeholder = ObjectToDOM.gen(placeholderTemplate)

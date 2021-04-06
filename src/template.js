@@ -166,7 +166,7 @@ const Template = (() => {
         return {
             tag: "div",
             classes: ["project-placeholder"],
-            id: projectID,
+            dataProjectId: projectID,
             children: [
                 {
                     tag: "div",
@@ -240,11 +240,11 @@ const Template = (() => {
         }
     }
 
-    const taskPlaceholder = (taskName, taskDue = "", taskPriority, taskID, taskNotes) => {
+    const taskPlaceholder = (taskName, taskDue = "", taskPriority = "normal", taskID, taskNotes, taskCompleted) => {
         return {
             tag: "div",
             classes: ["task-placeholder"],
-            id: taskID,
+            dataTaskId: taskID,
             children: [
                 {
                     tag: "div",
@@ -254,6 +254,7 @@ const Template = (() => {
                             tag: "input",
                             classes: ["task-completed"],
                             type: "checkbox",
+                            completed: taskCompleted
                         }
                     ]
                 },
