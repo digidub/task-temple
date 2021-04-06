@@ -11,18 +11,36 @@ const DOMcontrol = (() => {
     const taskViewList = document.querySelector(".task-view-list")
     const newProject = document.querySelector(".add-project")
     const newTask = document.querySelector(".add-task")
+    const newProjectIcon = newProject.querySelector("img")
+    const newTaskIcon = newTask.querySelector("img")
+
+    function noProjectsWarning() {
+        taskViewList.innerText = "Please add a project before adding individual tasks"
+    }
+
+    function NoTasksWarning() {
+        taskViewList.innerText = "No tasks! Add your first :)"
+    }
+
+    function clearNoTasksWarning() {
+        taskViewList.innerText = ""
+    }
 
 
-    const displayProjects = () => {
+    const displayAllProjects = () => {
         appData.projects.forEach(project => {
-            let projectDiv = placeholderGen("project", project.getName(), project.getDue(), project.getPriority(), project.getId())
-            projectViewList.appendChild(projectDiv);
+            displayProject(project)
         })
+    }
+
+    function displayProject(project) {
+        let projectDiv = placeholderGen("project", project.getName(), project.getDue(), project.getPriority(), project.getId())
+        projectViewList.appendChild(projectDiv);
     }
 
     const displayTasks = (projectID) => {
         taskViewList.innerHTML = "";
-        if (appControl.lookupProject(projectID).tasks.length < 1) taskViewList.innerText = "No tasks! Add your first :)"
+        if (appControl.lookupProject(projectID).tasks.length < 1) NoTasksWarning()
         appControl.lookupProject(projectID).tasks.forEach(task => {
             let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getId(), task.getNotes(), task.getCompleted())
             taskViewList.appendChild(taskDiv)
@@ -79,44 +97,32 @@ const DOMcontrol = (() => {
     function editProject(e) {
         //check whether project or task
         let objectType = checkObjectType(e)
-
         //dom identifiers
         let editing = editDOMFinders(e, objectType)
         let editDue = editing.dueDiv.innerText
         editing.dueDiv.innerHTML = `<input type="date" name="${objectType}-due" id="edit-date"> <button id="clear-date">X</button>`
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
-
         editDueForm.value = editDue
-
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
-
-
         toggleEditable([editing.name, editing.notes])
-
         //locate actual object being edited
         let actualObjectBeingEdited = activeEditingObject(objectType, editing.id)
-
         //find active project for notes
         let activeProject = appControl.lookupProject(appControl.getActiveProject())
-
         clearDateDiv.onclick = function () {
             editDueForm.value = ""
         }
-
         editing.priorityButton.addEventListener('click', () => {
             priorityController(editing.priorityButton, actualObjectBeingEdited)
         })
-
         editing.deleteButton.addEventListener('click', () => {
             appControl.deleteController(objectType, editing.placeholder, activeProject, editing.id)
         })
-
         editing.saveButton.onclick = function () {
             saveChanges(objectType, actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.name, editing.dueDiv, editing.placeholder, editing.notes)
             editing.priorityButton.removeEventListener('click', priorityController)
         }
-
     }
 
     function saveChanges(objectType, objectBeingEdited, editedName, editedDueDate, editName, editDueDiv, editPlaceholder, editNotes) {
@@ -141,12 +147,6 @@ const DOMcontrol = (() => {
         if (priority.includes("normal")) return "high"
         else if (priority.includes("high")) return "low"
         else if (priority.includes("low")) return "normal"
-    }
-
-    
-
-    function checkCompleted() {
-
     }
 
     function placeholderGen(template, name, due, priority, ID, notes, completed) {
@@ -191,16 +191,21 @@ const DOMcontrol = (() => {
 
     newProject.onclick = function () {
         if (!document.querySelector(".add-project-form")) {
+            newProjectIcon.src = "hide.svg"
             generateForm("project", projectView)
         }
         else projectView.removeChild(document.querySelector(".add-project-form"))
+        newProjectIcon.src = "add.svg"
     }
 
     newTask.onclick = function () {
         if (!document.querySelector(".add-task-form")) {
-            generateForm("task", taskView)
+            newTaskIcon.src = "hide.svg"
+            if (appControl.checkForProjects() > 0) generateForm("task", taskView)
+            else noProjectsWarning()
         }
         else taskView.removeChild(document.querySelector(".add-task-form"))
+        newTaskIcon.src = "add.svg"
     }
 
     function generateForm(template, parent) {
@@ -248,7 +253,10 @@ const DOMcontrol = (() => {
     }
 
     return {
-        displayProjects,
+        noProjectsWarning,
+        clearNoTasksWarning,
+        displayAllProjects,
+        displayProject,
         displayTasks,
         appendProject,
         appendTask,

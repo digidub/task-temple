@@ -3,7 +3,6 @@ const ObjectToDOM = (() => {
     const gen = obj => {
 
         let domEl = document.createElement(obj.tag)
-        console.log(obj)
         if (obj.content) domEl.innerText = obj.content
         if (obj.classes) for (let cssClass of obj.classes) {
             domEl.classList.add(cssClass)

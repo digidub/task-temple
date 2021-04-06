@@ -4,6 +4,9 @@ import { Project } from './projects'
 import { Task } from './tasks'
 import { DOMcontrol } from './domcontrol'
 import { Template } from "./template";
+let firebase = require('firebase');
+let firebaseui = require('firebaseui');
+let ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 const appControl = (() => {
 
@@ -84,25 +87,6 @@ const appControl = (() => {
         return Task(name, notes, due, priority, completed)
     }
 
-    const newObjectDisplayController = (target, template) => {
-        let newest = fetchNewestObject(target)
-        let nName = newest.getName()
-        let nNotes;
-        if (template == "task") nNotes = newest.getNotes()
-        let nDue = newest.getDue()
-        let nPriority = newest.getPriority()
-        let nID = newest.getId()
-        let nDiv;
-        if (template == "project") {
-            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID)
-            DOMcontrol.appendProject(nDiv)
-        } else {
-            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID, nNotes)
-            DOMcontrol.appendTask(nDiv)
-            return nID
-        }
-    }
-
     const fetchNewestObject = (path) => {
         let newest = path[path.length - 1]
         return newest
@@ -150,21 +134,50 @@ const appControl = (() => {
         return lookupIndex
     }
 
+    const newObjectDisplayController = (target, template) => {
+        let newest = fetchNewestObject(target)
+        let nName = newest.getName()
+        let nNotes;
+        if (template == "task") nNotes = newest.getNotes()
+        let nDue = newest.getDue()
+        let nPriority = newest.getPriority()
+        let nID = newest.getId()
+        let nDiv;
+        if (template == "project") {
+            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID)
+            DOMcontrol.appendProject(nDiv)
+            return nID
+        } else {
+            nDiv = DOMcontrol.placeholderGen(template, nName, nDue, nPriority, nID, nNotes)
+            DOMcontrol.appendTask(nDiv)
+            return nID
+        }
+    }
+
     function addObjectController(template) {
         let form = collectForm(template)
         let newObj;
         if (!document.querySelector(`[name="${template}-notes"]`)) { //if there are no notes, implying project rather than task
             newObj = createNewProject(form.nameInput, form.dueInput, form.priorityInput)
             pushObj(appData.projects, newObj)
-            newObjectDisplayController(appData.projects, "project");
+            let showID = newObjectDisplayController(appData.projects, "project");
+            DOMcontrol.displayTasks(showID)
         } else {
             let activeProject = lookupProject(getActiveProject())
+            if (activeProject.tasks.length < 1) DOMcontrol.clearNoTasksWarning()
             newObj = createNewTask(form.nameInput, form.notesInput, form.dueInput, form.priorityInput)
             pushObj(activeProject.tasks, newObj)
             newObjectDisplayController(activeProject.tasks, "task");
             projectProgressBar(activeProject)
         }
         projectSaver('projects', projectsToString())
+    }
+
+    function checkForProjects() {
+        if (appData.projects.length > 0) {
+            return 1
+        }
+        else return 0
     }
 
     function collectForm(template) {
@@ -195,6 +208,9 @@ const appControl = (() => {
             activeProject.tasks.splice(indexToDelete, 1)
         }
         objectPlaceholder.remove()
+        if (appData.projects.length < 1) {
+            DOMcontrol.noProjectsWarning()
+        }
         projectSaver('projects', projectsToString())
     }
 
@@ -235,6 +251,7 @@ const appControl = (() => {
         projectProgressBar,
         addObjectController,
         projectsToString,
+        checkForProjects,
     }
 
 })();
