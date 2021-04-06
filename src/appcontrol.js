@@ -21,7 +21,7 @@ const appControl = (() => {
         let x = genDefault()
         pushObj(appData.projects[0].tasks, x.dT)
         setActiveProject(1)
-        DOMcontrol.displayProjects();
+        DOMcontrol.displayAllProjects();
         DOMcontrol.displayTasks(1); //need to change this fig later on when ID logic sorted!
     }
 
@@ -61,6 +61,7 @@ const appControl = (() => {
     }
 
     const restoreSavedObjects = (obj) => {
+        let savedActiveProject = fetch('activeproject')
         for (let i = 0; i < obj.length; i++) {
             let x = Project(obj[i].name, obj[i].due, obj[i].priority, obj[i].completed)
             pushObj(appData.projects, x)
@@ -69,10 +70,10 @@ const appControl = (() => {
                 let y = Task(obj[i].tasks[j].name, obj[i].tasks[j].notes, obj[i].tasks[j].due, obj[i].tasks[j].priority, obj[i].tasks[j].completed)
                 pushObj(appData.projects[i].tasks, y)
             }
+            DOMcontrol.displayProject(lookupProject(getActiveProject()))
+            projectProgressBar(lookupProject(getActiveProject()))
         }
-        DOMcontrol.displayProjects()
-        projectProgressBar(lookupProject(getActiveProject()))
-
+        if (appData.projects.length > 0) DOMcontrol.displayTasks(savedActiveProject)
     }
 
     const createNewProject = (name, due, priority, completed) => {
@@ -109,6 +110,7 @@ const appControl = (() => {
 
     function setActiveProject(projID) {
         appData.setActiveProject(projID)
+        projectSaver('activeproject', getActiveProject())
     }
 
     //returns ID of active project
@@ -207,6 +209,7 @@ const appControl = (() => {
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
         projectProgressBar(activeProject)
+        projectSaver('projects', projectsToString())
     }
 
     function projectProgressBar(activeProject) {
