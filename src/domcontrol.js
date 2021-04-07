@@ -2,6 +2,7 @@ import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
 import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
+import { fireTheBase } from "./firebase";
 
 const DOMcontrol = (() => {
 
@@ -13,6 +14,21 @@ const DOMcontrol = (() => {
     const newTask = document.querySelector(".add-task")
     const newProjectIcon = newProject.querySelector("img")
     const newTaskIcon = newTask.querySelector("img")
+    const login = document.querySelector(".login")
+    const modal = document.getElementById("myModal");
+    const logout = document.querySelector(".logout")
+
+    logout.onclick = function () {
+        fireTheBase.auth.signOut();
+    }
+
+    login.onclick = function () {
+        const SignInWithGoogle = () => {
+            fireTheBase.auth.signInWithPopup(fireTheBase.provider)
+        }
+        SignInWithGoogle()
+        //modal.style.display = "block";
+    }
 
     function noProjectsWarning() {
         taskViewList.innerText = "Please add a project before adding individual tasks"
@@ -114,14 +130,14 @@ const DOMcontrol = (() => {
             editDueForm.value = ""
         }
         editing.priorityButton.addEventListener('click', () => {
-            priorityController(editing.priorityButton, actualObjectBeingEdited)
+            appControl.priorityController(editing.priorityButton, actualObjectBeingEdited)
         })
         editing.deleteButton.addEventListener('click', () => {
             appControl.deleteController(objectType, editing.placeholder, activeProject, editing.id)
         })
         editing.saveButton.onclick = function () {
             saveChanges(objectType, actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.name, editing.dueDiv, editing.placeholder, editing.notes)
-            editing.priorityButton.removeEventListener('click', priorityController)
+            editing.priorityButton.removeEventListener('click', appControl.priorityController)
         }
     }
 
@@ -134,19 +150,6 @@ const DOMcontrol = (() => {
         objectBeingEdited.editDue(editedDueDate)
         appControl.projectSaver('projects', appControl.projectsToString())
         editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
-    }
-
-    function priorityController(priorityButton, actualObjectBeingEdited) {
-        let newPriority = editPriority(priorityButton.src)
-        priorityButton.src = `${newPriority}.svg`
-        actualObjectBeingEdited.editPriority(newPriority)
-        appControl.projectSaver('projects', appControl.projectsToString())
-    }
-
-    function editPriority(priority) {
-        if (priority.includes("normal")) return "high"
-        else if (priority.includes("high")) return "low"
-        else if (priority.includes("low")) return "normal"
     }
 
     function placeholderGen(template, name, due, priority, ID, notes, completed) {
@@ -253,6 +256,8 @@ const DOMcontrol = (() => {
     }
 
     return {
+        login,
+        logout,
         noProjectsWarning,
         clearNoTasksWarning,
         displayAllProjects,

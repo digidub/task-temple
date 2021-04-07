@@ -210,6 +210,19 @@ const appControl = (() => {
         return stringedProjects
     }
 
+    function priorityController(priorityButton, actualObjectBeingEdited) {
+        let newPriority = editPriority(priorityButton.src)
+        priorityButton.src = `${newPriority}.svg`
+        actualObjectBeingEdited.editPriority(newPriority)
+        appControl.projectSaver('projects', appControl.projectsToString())
+    }
+
+    function editPriority(priority) {
+        if (priority.includes("normal")) return "high"
+        else if (priority.includes("high")) return "low"
+        else if (priority.includes("low")) return "normal"
+    }
+
     function deleteController(objectType, objectPlaceholder, activeProject, objectID) {
 
         if (objectType === "project") {
@@ -270,6 +283,7 @@ const appControl = (() => {
         projectsToString,
         checkForProjects,
         restoreSavedObjects,
+        priorityController,
     }
 
 })();
