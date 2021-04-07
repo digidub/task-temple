@@ -2,7 +2,7 @@ import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
 import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
-import { fireTheBase } from "./firebase";
+import { Fb } from "./firebase";
 
 const DOMcontrol = (() => {
 
@@ -19,15 +19,14 @@ const DOMcontrol = (() => {
     const logout = document.querySelector(".logout")
 
     logout.onclick = function () {
-        fireTheBase.auth.signOut();
+        Fb.auth.signOut();
     }
 
     login.onclick = function () {
         const SignInWithGoogle = () => {
-            fireTheBase.auth.signInWithPopup(fireTheBase.provider)
+            Fb.auth.signInWithPopup(Fb.provider)
         }
         SignInWithGoogle()
-        //modal.style.display = "block";
     }
 
     function noProjectsWarning() {
