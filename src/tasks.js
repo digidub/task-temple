@@ -5,7 +5,6 @@ const Task = (taskName, desc, dueDate = null, pri = "normal", comp = 0) => {
 
     let name = taskName;
     const notes = desc;
-    const created = new Date();
     let due = dueDate;
     let completed = comp; //0 == uncompleted, 1 == completed
     let priority = pri

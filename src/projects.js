@@ -4,7 +4,6 @@ import { Task } from './tasks'
 const Project = (projectName, dueDate = null, pri = "normal", comp = 0) => {
 
     let name = projectName;
-    const created = new Date();
     let due = dueDate;
     const tasks = [];
     let completed = comp; //0 == uncompleted, 100 == completed
@@ -85,7 +84,6 @@ const Project = (projectName, dueDate = null, pri = "normal", comp = 0) => {
 
     return {
         tasks,
-        created,
         editDue,
         editName,
         editPriority,
