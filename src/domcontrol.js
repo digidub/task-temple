@@ -259,7 +259,7 @@ const DOMcontrol = (() => {
 
     function progressPaint(id, progress) {
         let projectPlaceholder = projectViewList.querySelector(`.project-placeholder[data-project-id="${id}"]`)
-        projectPlaceholder.style.background = `linear-gradient(107deg, rgba(218,32,42,1) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
+        projectPlaceholder.style.background = `linear-gradient(120deg, rgba(0, 0, 0, 0.1) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
     }
 
     return {
