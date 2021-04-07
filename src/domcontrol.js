@@ -15,8 +15,16 @@ const DOMcontrol = (() => {
     const newProjectIcon = newProject.querySelector("img")
     const newTaskIcon = newTask.querySelector("img")
     const login = document.querySelector(".login")
-    const modal = document.getElementById("myModal");
+    const aboutBtn = document.querySelector(".nav-about");
     const logout = document.querySelector(".logout")
+    const modal = document.querySelector(".modal")
+
+    aboutBtn.onclick = function() {
+        modal.style.display = "block";
+        modal.addEventListener("click", () => {
+            modal.style.display = "none"
+        })
+    }
 
     logout.onclick = function () {
         Fb.auth.signOut();
