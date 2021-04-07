@@ -5,7 +5,7 @@ import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
 import { DOMcontrol } from "./domcontrol";
 
-const fireTheBase = (() => {
+const Fb = (() => {
 
     const firebaseConfig = {
         apiKey: "AIzaSyAsW_HADjTvTHAJ3i6dy0F2CpKC_MWETzs",
@@ -29,7 +29,7 @@ const fireTheBase = (() => {
 
     auth.onAuthStateChanged(user => {
         if (user) {
-            fireTheBase.auth
+            Fb.auth
             DOMcontrol.logout.classList.remove("hide")
             DOMcontrol.login.classList.add("hide")
             appData.userId = firebase.auth().currentUser.uid;
@@ -39,14 +39,13 @@ const fireTheBase = (() => {
             console.log(`not logged in`)
             DOMcontrol.logout.classList.add("hide")
             DOMcontrol.login.classList.remove("hide")
-            appControl.projectLoader('projects')
+            appControl.localStorageLoader('projects')
         }
     })
 
     function getUserData(userId) {
         firebase.database().ref().child("users").child(userId).child("projects").get().then(function (snapshot) {
             if (snapshot.exists()) {
-                console.log(snapshot.val().projects)
                 appControl.restoreSavedObjects(snapshot.val().projects, "1")
             }
             else {
@@ -78,4 +77,4 @@ const fireTheBase = (() => {
 
 })();
 
-export { fireTheBase }
+export { Fb }
