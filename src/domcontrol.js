@@ -19,7 +19,7 @@ const DOMcontrol = (() => {
     const logout = document.querySelector(".logout")
     const modal = document.querySelector(".modal")
 
-    aboutBtn.onclick = function() {
+    aboutBtn.onclick = function () {
         modal.style.display = "block";
         modal.addEventListener("click", () => {
             modal.style.display = "none"
@@ -173,10 +173,20 @@ const DOMcontrol = (() => {
         taskViewList.appendChild(placeholder)
     }
 
+    function removeActive() {
+        let removeActive = projectViewList.querySelector(".project-placeholder-active")
+        removeActive.classList.toggle("project-placeholder-active")
+        removeActive.classList.toggle("project-placeholder")
+    }
+
     projectViewList.onclick = function (e) {
-        if (e.target.className === "project-name" || e.target.className === "project-edit-icon") {
-            let projID = e.target.parentNode.parentNode.getAttribute(`data-project-id`)
+        if (e.target.className === "project-name" || e.target.className === "project-edit-icon" || e.target.className === "project-due") {
+            let placeholder = e.target.parentNode.parentNode
+            let projID = placeholder.getAttribute(`data-project-id`)
             displayTasks(projID)
+            if (projectViewList.querySelector(".project-placeholder-active")) removeActive()
+            placeholder.classList.toggle("project-placeholder-active")
+            placeholder.classList.toggle("project-placeholder")
             appControl.setActiveProject(projID)
             if (e.target.className == "project-edit-icon") {
                 editProject(e)
@@ -259,7 +269,7 @@ const DOMcontrol = (() => {
 
     function progressPaint(id, progress) {
         let projectPlaceholder = projectViewList.querySelector(`.project-placeholder[data-project-id="${id}"]`)
-        projectPlaceholder.style.background = `linear-gradient(120deg, rgba(0, 0, 0, 0.1) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
+        projectPlaceholder.style.background = `linear-gradient(135deg, rgba(0, 0, 0, 0.05) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
     }
 
     return {
