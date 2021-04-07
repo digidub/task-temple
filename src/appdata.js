@@ -1,5 +1,6 @@
 const appData = (() => {
     let projects = []
+    let userId;
 
     const activeProject = {
         id: "",
@@ -11,8 +12,9 @@ const appData = (() => {
 
     const getActiveProject = () => activeProject.id
 
-    return {        
+    return {
         projects,
+        userId,
         setActiveProject,
         getActiveProject,
     }

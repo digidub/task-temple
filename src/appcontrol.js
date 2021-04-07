@@ -4,13 +4,15 @@ import { Project } from './projects'
 import { Task } from './tasks'
 import { DOMcontrol } from './domcontrol'
 import { Template } from "./template";
-let firebase = require('firebase');
-let firebaseui = require('firebaseui');
-let ui = new firebaseui.auth.AuthUI(firebase.auth());
+import { fireTheBase } from "./firebase";
+
 
 const appControl = (() => {
 
     function projectLoader(obj) {
+        //if (appData.userId) {
+        //    fireTheBase.getUserData(appData.userId)
+        //}
         if (storageCheck(obj)) {
             let restored = fetch(obj);
             restoreSavedObjects(restored)
@@ -63,15 +65,26 @@ const appControl = (() => {
         lsControl.saveStorage(name, obj)
     }
 
-    const restoreSavedObjects = (obj) => {
-        let savedActiveProject = fetch('activeproject')
+    function fetchSavedActiveProject(activeProj) {
+        if (appData.userId) return activeProj
+        else return fetch('activeproject')
+    }
+
+    const restoreSavedObjects = (obj, activeProj) => {
+        console.log(obj)
+        let savedActiveProject = fetchSavedActiveProject(activeProj)
         for (let i = 0; i < obj.length; i++) {
             let x = Project(obj[i].name, obj[i].due, obj[i].priority, obj[i].completed)
             pushObj(appData.projects, x)
+            console.log(appData.projects)
             setActiveProject(i + 1)
-            for (let j = 0; j < obj[i].tasks.length; j++) {
-                let y = Task(obj[i].tasks[j].name, obj[i].tasks[j].notes, obj[i].tasks[j].due, obj[i].tasks[j].priority, obj[i].tasks[j].completed)
-                pushObj(appData.projects[i].tasks, y)
+            console.log(obj[i])
+            console.log(obj[i].tasks)
+            if (obj[i].tasks) {
+                for (let j = 0; j < obj[i].tasks.length; j++) {
+                    let y = Task(obj[i].tasks[j].name, obj[i].tasks[j].notes, obj[i].tasks[j].due, obj[i].tasks[j].priority, obj[i].tasks[j].completed)
+                    pushObj(appData.projects[i].tasks, y)
+                }
             }
             DOMcontrol.displayProject(lookupProject(getActiveProject()))
             projectProgressBar(lookupProject(getActiveProject()))
@@ -94,7 +107,8 @@ const appControl = (() => {
 
     function setActiveProject(projID) {
         appData.setActiveProject(projID)
-        projectSaver('activeproject', getActiveProject())
+        if (appData.userId) fireTheBase.saveActive(appData.userId, getActiveProject())
+        else projectSaver('activeproject', getActiveProject())
     }
 
     //returns ID of active project
@@ -170,7 +184,8 @@ const appControl = (() => {
             newObjectDisplayController(activeProject.tasks, "task");
             projectProgressBar(activeProject)
         }
-        projectSaver('projects', projectsToString())
+        if (appData.userId) fireTheBase.saveProjects(appData.userId, projectsToString())
+        else projectSaver('projects', projectsToString())
     }
 
     function checkForProjects() {
@@ -211,7 +226,8 @@ const appControl = (() => {
         if (appData.projects.length < 1) {
             DOMcontrol.noProjectsWarning()
         }
-        projectSaver('projects', projectsToString())
+        if (appData.userId) fireTheBase.saveProjects(appData.userId, projectsToString())
+        else projectSaver('projects', projectsToString())
     }
 
     function switchActiveProject(index) {
@@ -225,7 +241,8 @@ const appControl = (() => {
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
         projectProgressBar(activeProject)
-        projectSaver('projects', projectsToString())
+        if (appData.userId) fireTheBase.saveProjects(appData.userId, projectsToString())
+        else projectSaver('projects', projectsToString())
     }
 
     function projectProgressBar(activeProject) {
@@ -252,6 +269,7 @@ const appControl = (() => {
         addObjectController,
         projectsToString,
         checkForProjects,
+        restoreSavedObjects,
     }
 
 })();
