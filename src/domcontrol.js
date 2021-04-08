@@ -180,7 +180,7 @@ const DOMcontrol = (() => {
     }
 
     projectViewList.onclick = function (e) {
-        if (e.target.className === "project-name" || e.target.className === "project-edit-icon" || e.target.className === "project-due") {
+        if (e.target.className === "project-name" || e.target.classList.contains("project-edit-icon") || e.target.className === "project-due") {
             let placeholder = e.target.parentNode.parentNode
             let projID = placeholder.getAttribute(`data-project-id`)
             displayTasks(projID)
@@ -188,47 +188,59 @@ const DOMcontrol = (() => {
             placeholder.classList.toggle("project-placeholder-active")
             placeholder.classList.toggle("project-placeholder")
             appControl.setActiveProject(projID)
-            if (e.target.className == "project-edit-icon") {
+            if (e.target.classList.contains("project-edit-icon")) {
                 editProject(e)
             }
         }
     }
 
-    function hoverIcons(target) {
+    function hoverIcons(target, template) {
         let placeholder = target
-        let editIcon = placeholder.querySelector(".project-edit-icon")
-        let priorityIcon = placeholder.querySelector(".project-edit-icon")
-        editIcon.classList.add("icon-hover");
-        priorityIcon.classList.add("icon-hover");
+        let editIcon = placeholder.querySelector(`.${template}-edit-icon`)
+        let priorityIcon = placeholder.querySelector(`.${template}-priority-icon`)
+        editIcon.classList.add(`icon-hover`);
+        priorityIcon.classList.add(`icon-hover`);
     }
 
-    function rmHoverIcons(target) {
+    function rmHoverIcons(target, template) {
         let placeholder = target
-        let editIcon = placeholder.querySelector(".project-edit-icon")
-        let priorityIcon = placeholder.querySelector(".project-edit-icon")
-        editIcon.classList.remove("icon-hover");
-        priorityIcon.classList.remove("icon-hover");
+        let editIcon = placeholder.querySelector(`.${template}-edit-icon`)
+        let priorityIcon = placeholder.querySelector(`.${template}-priority-icon`)
+        editIcon.classList.remove(`icon-hover`);
+        priorityIcon.classList.remove(`icon-hover`);
     }
 
     projectViewList.onmouseover = function (e) {
-        if (e.target.className === "project-placeholder") hoverIcons(e.target)
-        if (e.target.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode)
-        if (e.target.parentNode.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode.parentNode)
+        if (e.target.className === "project-placeholder") hoverIcons(e.target, "project")
+        if (e.target.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode, "project")
+        if (e.target.parentNode.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode.parentNode, "project")
     }
 
     projectViewList.onmouseout = function (e) {
-        if (e.target.className === "project-placeholder") rmHoverIcons(e.target)
-        if (e.target.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode)
-        if (e.target.parentNode.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode.parentNode)
+        if (e.target.className === "project-placeholder") rmHoverIcons(e.target, "project")
+        if (e.target.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode, "project")
+        if (e.target.parentNode.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode.parentNode, "project")
+    }
+
+    taskViewList.onmouseover = function (e) {
+        if (e.target.className === "task-placeholder") hoverIcons(e.target, "task")
+        if (e.target.parentNode.className === "task-placeholder") hoverIcons(e.target.parentNode, "task")
+        if (e.target.parentNode.parentNode.className === "task-placeholder") hoverIcons(e.target.parentNode.parentNode, "task")
+    }
+
+    taskViewList.onmouseout = function (e) {
+        if (e.target.className === "task-placeholder") rmHoverIcons(e.target, "task")
+        if (e.target.parentNode.className === "task-placeholder") rmHoverIcons(e.target.parentNode, "task")
+        if (e.target.parentNode.parentNode.className === "task-placeholder") rmHoverIcons(e.target.parentNode.parentNode, "task")
     }
 
     taskViewList.onclick = function (e) {
-        if ((e.target.className == "task-notes" || e.target.className == "task-notes-expanded") && (!e.target.parentNode.parentNode.classList.contains("task-placeholder-edit"))) {
+        if ((e.target.className === "task-notes" || e.target.className === "task-notes-expanded") && (!e.target.parentNode.parentNode.classList.contains("task-placeholder-edit"))) {
             let toExpand = e.target
             toExpand.classList.toggle("task-notes-expanded")
             toExpand.classList.toggle("task-notes")
         }
-        else if (e.target.className === "task-edit-icon") {
+        else if (e.target.classList.contains("task-edit-icon")) {
             editProject(e)
         }
         else if (e.target.className === "task-completed") {
@@ -297,7 +309,7 @@ const DOMcontrol = (() => {
 
     function progressPaint(id, progress) {
         let projectPlaceholder = projectViewList.querySelector(`.project-placeholder[data-project-id="${id}"]`)
-        projectPlaceholder.style.background = `linear-gradient(135deg, rgba(0, 0, 0, 0.05) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
+        projectPlaceholder.style.background = `linear-gradient(135deg, rgba(245, 245, 245) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
     }
 
     return {
