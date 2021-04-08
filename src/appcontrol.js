@@ -10,8 +10,8 @@ import { Fb } from "./firebase";
 const appControl = (() => {
 
     function localStorageLoader(obj) {
-        if (storageCheck(obj)) {
-            let restored = fetchObj(obj);
+        if (lsStorageCheck(obj)) {
+            let restored = lsFetchObj(obj);
             restoreSavedObjects(restored)
         }
         else {
@@ -49,30 +49,35 @@ const appControl = (() => {
     }
 
     /* Local Storage Control Functions */
-    const storageCheck = (obj) => {
+    const lsStorageCheck = (obj) => {
         if (lsControl.storageCheck(obj)) return true
         else return false
     }
 
-    const fetchObj = (obj) => {
+    const lsFetchObj = (obj) => {
         let fetchedObj = lsControl.fetchStorage(obj)
         return fetchedObj
     }
 
-    const projectSaver = (name, obj) => {
+    const lsProjectSaver = (name, obj) => {
         lsControl.saveStorage(name, obj)
     }
 
     function storeActiveProject() {
         if (appData.userId) Fb.saveActive(appData.userId, getActiveProject())
-        else projectSaver('activeproject', getActiveProject())
+        else lsProjectSaver('activeproject', getActiveProject())
     }
 
     function fetchSavedActiveProject(activeProj) {
         if (appData.userId) return activeProj
-        else return fetchObj('activeproject')
+        else if (lsFetchObj('activeproject') !== null) lsFetchObj('activeproject')
+        else return 1
     }
 
+    function findActiveProjInDom(id) {
+        let placeholder = document.querySelector(`[data-project-id="${id}"]`)
+        DOMcontrol.setActive(placeholder)
+    }
 
     const restoreSavedObjects = (obj, activeProj) => {
         let savedActiveProject = fetchSavedActiveProject(activeProj)
@@ -90,6 +95,7 @@ const appControl = (() => {
             projectProgressBar(lookupProject(getActiveProject()))
         }
         if (appData.projects.length > 0) DOMcontrol.displayTasks(savedActiveProject)
+        findActiveProjInDom(savedActiveProject)
     }
 
     const createNewProject = (name, due, priority, completed) => {
@@ -183,7 +189,7 @@ const appControl = (() => {
             projectProgressBar(activeProject)
         }
         if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
-        else projectSaver('projects', projectsToString())
+        else lsProjectSaver('projects', projectsToString())
     }
 
     function checkForProjects() {
@@ -212,7 +218,7 @@ const appControl = (() => {
         priorityButton.src = `${newPriority}.svg`
         actualObjectBeingEdited.editPriority(newPriority)
         if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
-        else projectSaver('projects', projectsToString())
+        else lsProjectSaver('projects', projectsToString())
     }
 
     function editPriority(priority) {
@@ -237,7 +243,7 @@ const appControl = (() => {
             DOMcontrol.noProjectsWarning()
         }
         if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
-        else projectSaver('projects', projectsToString())
+        else lsProjectSaver('projects', projectsToString())
     }
 
     function switchActiveProject(index) {
@@ -253,7 +259,7 @@ const appControl = (() => {
         activeTask.toggleCompleted()
         projectProgressBar(activeProject)
         if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
-        else projectSaver('projects', projectsToString())
+        else lsProjectSaver('projects', projectsToString())
     }
 
     function projectProgressBar(activeProject) {
@@ -265,8 +271,8 @@ const appControl = (() => {
         genDefaultProject,
         genDefaultTask,
         localStorageLoader,
-        projectSaver,
-        storageCheck,
+        lsProjectSaver,
+        lsStorageCheck,
         newObjectDisplayController,
         lookupProject,
         setActiveProject,

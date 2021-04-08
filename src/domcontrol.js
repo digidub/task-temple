@@ -173,6 +173,11 @@ const DOMcontrol = (() => {
         taskViewList.appendChild(placeholder)
     }
 
+    function setActive(placeholder) {
+        placeholder.classList.toggle("project-placeholder-active")
+        placeholder.classList.toggle("project-placeholder")
+    }
+
     function removeActive() {
         let removeActive = projectViewList.querySelector(".project-placeholder-active")
         removeActive.classList.toggle("project-placeholder-active")
@@ -185,8 +190,7 @@ const DOMcontrol = (() => {
             let projID = placeholder.getAttribute(`data-project-id`)
             displayTasks(projID)
             if (projectViewList.querySelector(".project-placeholder-active")) removeActive()
-            placeholder.classList.toggle("project-placeholder-active")
-            placeholder.classList.toggle("project-placeholder")
+            setActive(placeholder)
             appControl.setActiveProject(projID)
             if (e.target.classList.contains("project-edit-icon")) {
                 editProject(e)
@@ -245,6 +249,7 @@ const DOMcontrol = (() => {
         }
         else if (e.target.className === "task-completed") {
             let taskID = e.target.parentNode.parentNode.getAttribute(`data-task-id`)
+            console.log(appControl.getActiveProject())
             appControl.completedController(taskID)
         }
     }
@@ -284,15 +289,12 @@ const DOMcontrol = (() => {
     }
 
     function getFormInput(template) {
-
         let nameInput = document.querySelector(`[name="${template}-name"]`).value;
         if (nameInput == "") nameInput = "Untitled Project"
-
         let notesInput;
         if (document.querySelector(`[name="${template}-notes"]`)) {
             notesInput = document.querySelector(`[name="${template}-notes"]`).value
         }
-
         let dueInput;
         if (document.querySelector(`[name="${template}-due"]`).value) {
             dueInput = document.querySelector(`[name="${template}-due"]`).value
@@ -300,15 +302,12 @@ const DOMcontrol = (() => {
         else {
             dueInput = null
         }
-
         let priorityInput = document.querySelector(`[name="${template}-priority"]`).value;
-
         return { nameInput, notesInput, dueInput, priorityInput }
-
     }
 
     function progressPaint(id, progress) {
-        let projectPlaceholder = projectViewList.querySelector(`.project-placeholder[data-project-id="${id}"]`)
+        let projectPlaceholder = projectViewList.querySelector(`[data-project-id="${id}"]`)
         projectPlaceholder.style.background = `linear-gradient(135deg, rgba(245, 245, 245) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
     }
 
@@ -325,6 +324,7 @@ const DOMcontrol = (() => {
         placeholderGen,
         getFormInput,
         progressPaint,
+        setActive,
     }
 
 
