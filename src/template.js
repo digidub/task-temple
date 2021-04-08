@@ -46,18 +46,18 @@ const Template = (() => {
                                 children: [
                                     {
                                         tag: 'option',
-                                        value: 'High',
+                                        value: 'normal',
+                                        content: 'Normal',
+                                        selected: 'true',
+                                    },
+                                    {
+                                        tag: 'option',
+                                        value: 'high',
                                         content: 'High',
                                     },
                                     {
                                         tag: 'option',
-                                        value: 'Normal',
-                                        selected: 'true',
-                                        content: 'Normal',
-                                    },
-                                    {
-                                        tag: 'option',
-                                        value: 'Low',
+                                        value: 'low',
                                         content: 'Low',
                                     },
                                 ]
@@ -133,18 +133,18 @@ const Template = (() => {
                                 children: [
                                     {
                                         tag: 'option',
-                                        value: 'High',
+                                        value: 'normal',
+                                        content: 'Normal',
+                                        selected: 'true',
+                                    },
+                                    {
+                                        tag: 'option',
+                                        value: 'high',
                                         content: 'High',
                                     },
                                     {
                                         tag: 'option',
-                                        value: 'Normal',
-                                        selected: 'true',
-                                        content: 'Normal',
-                                    },
-                                    {
-                                        tag: 'option',
-                                        value: 'Low',
+                                        value: 'low',
                                         content: 'Low',
                                     },
                                 ]
