@@ -155,7 +155,7 @@ const DOMcontrol = (() => {
         if (editNotes) editNotes.setAttribute('contenteditable', 'false');
         objectBeingEdited.editName(editedName)
         objectBeingEdited.editDue(editedDueDate)
-        appControl.projectSaver('projects', appControl.projectsToString())
+        appControl.lsProjectSaver('projects', appControl.projectsToString())
         editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
     }
 
@@ -191,7 +191,7 @@ const DOMcontrol = (() => {
             displayTasks(projID)
             if (projectViewList.querySelector(".project-placeholder-active")) removeActive()
             setActive(placeholder)
-            appControl.setActiveProject(projID)
+            appControl.switchActiveProject(projID)
             if (e.target.classList.contains("project-edit-icon")) {
                 editProject(e)
             }

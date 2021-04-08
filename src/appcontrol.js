@@ -70,7 +70,7 @@ const appControl = (() => {
 
     function fetchSavedActiveProject(activeProj) {
         if (appData.userId) return activeProj
-        else if (lsFetchObj('activeproject') !== null) lsFetchObj('activeproject')
+        else if (lsFetchObj('activeproject') !== null) return lsFetchObj('activeproject')
         else return 1
     }
 
@@ -230,7 +230,7 @@ const appControl = (() => {
     function deleteController(objectType, objectPlaceholder, activeProject, objectID) {
         if (objectType === "project") {
             let indexToDelete = lookupProjectIndex(objectID)
-            switchActiveProject(indexToDelete)
+            switchActiveProjectOnDelete(indexToDelete)
             DOMcontrol.displayTasks(getActiveProject())
             appData.projects.splice(indexToDelete, 1)
         }
@@ -247,9 +247,15 @@ const appControl = (() => {
     }
 
     function switchActiveProject(index) {
+        setActiveProject(index)
+        storeActiveProject()
+    }
+
+    function switchActiveProjectOnDelete(index) {
         let newID = switchIDByIndex(index)
         if (newID === 0) return;
         setActiveProject(newID)
+        console.log(getActiveProject())
         storeActiveProject()
     }
 
@@ -275,6 +281,7 @@ const appControl = (() => {
         lsStorageCheck,
         newObjectDisplayController,
         lookupProject,
+        switchActiveProject,
         setActiveProject,
         getActiveProject,
         lookupProjectIndex,
