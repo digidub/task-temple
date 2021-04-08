@@ -194,6 +194,34 @@ const DOMcontrol = (() => {
         }
     }
 
+    function hoverIcons(target) {
+        let placeholder = target
+        let editIcon = placeholder.querySelector(".project-edit-icon")
+        let priorityIcon = placeholder.querySelector(".project-edit-icon")
+        editIcon.classList.add("icon-hover");
+        priorityIcon.classList.add("icon-hover");
+    }
+
+    function rmHoverIcons(target) {
+        let placeholder = target
+        let editIcon = placeholder.querySelector(".project-edit-icon")
+        let priorityIcon = placeholder.querySelector(".project-edit-icon")
+        editIcon.classList.remove("icon-hover");
+        priorityIcon.classList.remove("icon-hover");
+    }
+
+    projectViewList.onmouseover = function (e) {
+        if (e.target.className === "project-placeholder") hoverIcons(e.target)
+        if (e.target.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode)
+        if (e.target.parentNode.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode.parentNode)
+    }
+
+    projectViewList.onmouseout = function (e) {
+        if (e.target.className === "project-placeholder") rmHoverIcons(e.target)
+        if (e.target.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode)
+        if (e.target.parentNode.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode.parentNode)
+    }
+
     taskViewList.onclick = function (e) {
         if ((e.target.className == "task-notes" || e.target.className == "task-notes-expanded") && (!e.target.parentNode.parentNode.classList.contains("task-placeholder-edit"))) {
             let toExpand = e.target
