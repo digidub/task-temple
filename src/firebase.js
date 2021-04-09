@@ -20,33 +20,35 @@ const Fb = (() => {
 
     firebase.initializeApp(firebaseConfig);
 
-    let firebaseui = require('firebaseui');
-    //let ui = new firebaseui.auth.AuthUI(firebase.auth());
-    let database = firebase.database();
-
     let provider = new firebase.auth.GoogleAuthProvider();
     const auth = firebase.auth()
 
     auth.onAuthStateChanged(user => {
         if (user) {
-            Fb.auth
+            auth
+            DOMcontrol.clearLists()
             DOMcontrol.logout.classList.remove("hide")
             DOMcontrol.login.classList.add("hide")
             appData.userId = firebase.auth().currentUser.uid;
+            appData.projects = []
+            localStorage.clear()
             getUserData(user.uid)
         } else {
             appData.userId = undefined;
             console.log(`not logged in`)
             DOMcontrol.logout.classList.add("hide")
             DOMcontrol.login.classList.remove("hide")
+            DOMcontrol.clearLists()
+            appData.projects = []
             appControl.localStorageLoader('projects')
         }
     })
 
     function getUserData(userId) {
-        firebase.database().ref().child("users").child(userId).child("projects").get().then(function (snapshot) {
+        firebase.database().ref().child("users").child(userId).get().then(function (snapshot) {
             if (snapshot.exists()) {
-                appControl.restoreSavedObjects(snapshot.val().projects, "1")
+                appControl.setActiveProject(snapshot.val().active.active)
+                appControl.restoreSavedObjects(snapshot.val().projects.projects, "1")
             }
             else {
                 console.log("No data available");
