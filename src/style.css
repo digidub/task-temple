@@ -81,7 +81,7 @@ svg {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-content: space-between;
+    justify-content: space-between;
 }
 
 h3 {
@@ -148,6 +148,10 @@ h3 {
 .edit-delete-save {
     display: flex;
     flex-direction: row;
+}
+
+.add-project-form {
+    width: auto;
 }
 
 .project-due {
@@ -228,7 +232,15 @@ button:focus,
     outline: none;
 }
 
-input {
+select {
+    background-color: #fdfdfd;
+}
+
+input[type=text], input[type=date], select {
+    padding: 5px 0px 5px 2px
+}
+
+input, select {
     border: none;
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
 border-radius: 6px;
