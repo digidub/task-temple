@@ -40,14 +40,20 @@ svg {
 }
 
 .navlink {
+    cursor: pointer;
+}
+
+.navlink:hover {
+    color: grey;
+}
+
+.navlink {
     margin: 0px 5px 0px 5px;
 }
 
 .app-view {
     display: flex;
     flex-direction: row;
-    border: 1px solid rgb(236, 236, 236);
-    border-radius: 10px;
 }
 
 .project-view-header, .task-view-header {
@@ -69,6 +75,13 @@ svg {
     flex: 1;
     margin: 5px 0px 5px 20px;
     width: 75%;
+}
+
+.task-form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-between;
 }
 
 h3 {
@@ -172,6 +185,9 @@ h3 {
     max-height: auto;
     font-family: "Open Sans";
     font-size: small;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
+border-radius: 6px;
+padding: 7px;
 }
 
 .task-status {
@@ -202,4 +218,18 @@ h3 {
 
 .hide {
     display: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus,
+[contenteditable] {
+    outline: none;
+}
+
+input {
+    border: none;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
+border-radius: 6px;
 }
