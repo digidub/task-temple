@@ -72,6 +72,7 @@ const DOMcontrol = (() => {
         appControl.lookupProject(projectID).tasks.forEach(task => {
             let taskDiv = placeholderGen("task", task.getName(), task.getDue(), task.getPriority(), task.getId(), task.getNotes(), task.getCompleted())
             taskViewList.appendChild(taskDiv)
+            if (task.getCompleted() === 1) strikeThroughCompleted(task.getId())
         })
     }
 
@@ -105,6 +106,7 @@ const DOMcontrol = (() => {
                 editNotesDiv.classList.toggle("task-notes-expanded")
                 editNotesDiv.classList.toggle("task-notes")
             }
+            console.log(e.target.parentNode.parentNode.querySelector(".task-notes-expanded.strikethrough"))
             return editNotesDiv
         }
     }
@@ -113,7 +115,9 @@ const DOMcontrol = (() => {
         let placeholder = e.target.parentNode.parentNode
         let name = e.target.parentNode.parentNode.querySelector(`.${objectType}-name`)
         let notesDiv = checkWhetherEditNotes(e)
+        console.log(notesDiv)
         let dueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
+        console.log(dueDiv)
         let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
         let id = e.target.parentNode.parentNode.getAttribute(`data-${objectType}-id`)
         let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
@@ -127,11 +131,12 @@ const DOMcontrol = (() => {
         let objectType = checkObjectType(e)
         //dom identifiers
         let editing = editDOMFinders(e, objectType)
-        let editDue = editing.dueDiv.innerText
+        let existingEditDueValue = editing.dueDiv.innerText
         editing.dueDiv.innerHTML = `<input type="date" name="${objectType}-due" id="edit-date"> <button id="clear-date">X</button>`
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
-        editDueForm.value = editDue
+        editDueForm.value = existingEditDueValue
+        editing.notesDiv.classList.remove("strikethrough")
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
         toggleEditable([editing.name, editing.notesDiv])
         //locate actual object being edited
@@ -148,11 +153,14 @@ const DOMcontrol = (() => {
             appControl.deleteController(objectType, editing.placeholder, activeProject, editing.id)
         })
         editing.saveButton.onclick = function () {
-            if (editDueForm.value > 0) editing.dueDiv.innerText = editedDueDate
-            else editing.dueDiv.innerText = "";
-            //if (editing.notesDiv) editing.notesDiv.setAttribute('contenteditable', 'false');
-            //editing.name.setAttribute('contenteditable', 'false');
+            editing.dueDiv.innerText = editDueForm.value
             toggleEditable([editing.name, editing.notesDiv])
+            if (editing.notesDiv && editing.name.classList.contains("strikethrough")) {
+                editing.notesDiv.classList.remove("task-notes-expanded")
+                editing.notesDiv.classList.add("task-notes")
+                editing.notesDiv.classList.add("strikethrough")
+            }
+            if (editing.notesDiv.innerText == "") editing.notesDiv.classList.remove("task-notes-expanded")
             editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
             appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.notesDiv.innerText)
             editing.priorityButton.removeEventListener('click', appControl.priorityController)
@@ -195,6 +203,24 @@ const DOMcontrol = (() => {
             if (e.target.classList.contains("project-edit-icon")) {
                 editProject(e)
             }
+        }
+    }
+
+    function strikeThroughCompleted(id) {
+        let taskPlaceholder = taskViewList.querySelector(`[data-task-id="${id}"]`)
+        let taskName = taskPlaceholder.querySelector(".task-name")
+        taskName.classList.toggle("strikethrough")
+        if (taskPlaceholder.querySelector(".task-due")) {
+            let taskDue = taskPlaceholder.querySelector(".task-due")
+            taskDue.classList.toggle("strikethrough")
+        }
+        if (taskPlaceholder.querySelector(".task-notes")) {
+            let taskNotes = taskPlaceholder.querySelector(".task-notes")
+            taskNotes.classList.toggle("strikethrough")
+        }
+        if (taskPlaceholder.querySelector(".task-notes-expanded")) {
+            let taskNotes = taskPlaceholder.querySelector(".task-notes-expanded")
+            taskNotes.classList.toggle("strikethrough")
         }
     }
 
@@ -327,6 +353,7 @@ const DOMcontrol = (() => {
         getFormInput,
         progressPaint,
         setActive,
+        strikeThroughCompleted,
     }
 
 
