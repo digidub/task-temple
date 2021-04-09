@@ -106,7 +106,6 @@ const DOMcontrol = (() => {
                 editNotesDiv.classList.toggle("task-notes-expanded")
                 editNotesDiv.classList.toggle("task-notes")
             }
-            console.log(e.target.parentNode.parentNode.querySelector(".task-notes-expanded.strikethrough"))
             return editNotesDiv
         }
     }
@@ -115,9 +114,7 @@ const DOMcontrol = (() => {
         let placeholder = e.target.parentNode.parentNode
         let name = e.target.parentNode.parentNode.querySelector(`.${objectType}-name`)
         let notesDiv = checkWhetherEditNotes(e)
-        console.log(notesDiv)
         let dueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
-        console.log(dueDiv)
         let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
         let id = e.target.parentNode.parentNode.getAttribute(`data-${objectType}-id`)
         let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
@@ -136,7 +133,7 @@ const DOMcontrol = (() => {
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
         editDueForm.value = existingEditDueValue
-        editing.notesDiv.classList.remove("strikethrough")
+        if (editing.notesDiv) editing.notesDiv.classList.remove("strikethrough")
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
         toggleEditable([editing.name, editing.notesDiv])
         //locate actual object being edited
@@ -160,7 +157,7 @@ const DOMcontrol = (() => {
                 editing.notesDiv.classList.add("task-notes")
                 editing.notesDiv.classList.add("strikethrough")
             }
-            if (editing.notesDiv.innerText == "") editing.notesDiv.classList.remove("task-notes-expanded")
+            if (editing.notesDiv && editing.notesDiv.innerText == "") editing.notesDiv.classList.remove("task-notes-expanded")
             editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
             appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.notesDiv.innerText)
             editing.priorityButton.removeEventListener('click', appControl.priorityController)
@@ -275,7 +272,6 @@ const DOMcontrol = (() => {
         }
         else if (e.target.className === "task-completed") {
             let taskID = e.target.parentNode.parentNode.getAttribute(`data-task-id`)
-            console.log(appControl.getActiveProject())
             appControl.completedController(taskID)
         }
     }
