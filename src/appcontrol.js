@@ -75,6 +75,11 @@ const appControl = (() => {
         else return 1
     }
 
+    function saveController() {
+        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
+        else lsProjectSaver('projects', projectsToString())
+    }
+
     function findActiveProjInDom(id) {
         let placeholder = document.querySelector(`[data-project-id="${id}"]`)
         DOMcontrol.setActive(placeholder)
@@ -189,8 +194,7 @@ const appControl = (() => {
             newObjectDisplayController(activeProject.tasks, "task");
             projectProgressBar(activeProject)
         }
-        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
-        else lsProjectSaver('projects', projectsToString())
+        
     }
 
     function checkForProjects() {
@@ -218,8 +222,7 @@ const appControl = (() => {
         let newPriority = editPriority(priorityButton.src)
         priorityButton.src = `${newPriority}.svg`
         actualObjectBeingEdited.editPriority(newPriority)
-        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
-        else lsProjectSaver('projects', projectsToString())
+        saveController()
     }
 
     function editPriority(priority) {
@@ -243,8 +246,7 @@ const appControl = (() => {
         if (appData.projects.length < 1) {
             DOMcontrol.noProjectsWarning()
         }
-        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
-        else lsProjectSaver('projects', projectsToString())
+        saveController()
     }
 
     function switchActiveProject(index) {
@@ -265,8 +267,7 @@ const appControl = (() => {
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
         projectProgressBar(activeProject)
-        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
-        else lsProjectSaver('projects', projectsToString())
+        saveController()
     }
 
     function projectProgressBar(activeProject) {
@@ -275,15 +276,11 @@ const appControl = (() => {
     }
 
     function saveChanges(objectBeingEdited, editedName, editedDueDate, editNotes) {
-        console.log({objectBeingEdited, editedName, editedDueDate, editNotes})
+        console.log({ objectBeingEdited, editedName, editedDueDate, editNotes })
         if (editNotes) objectBeingEdited.editNotes(editNotes)
         objectBeingEdited.editName(editedName)
         objectBeingEdited.editDue(editedDueDate)
-        if (Fb.auth.currentUser !== null) {
-            console.log(Fb.auth.currentUser)
-            Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
-        }
-        else lsProjectSaver('projects', projectsToString())
+        saveController()
     }
 
     return {
