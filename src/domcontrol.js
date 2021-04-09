@@ -26,6 +26,11 @@ const DOMcontrol = (() => {
         })
     }
 
+    function clearLists() {
+        projectViewList.textContent = ""
+        taskViewList.textContent = ""
+    }
+
     logout.onclick = function () {
         Fb.auth.signOut();
     }
@@ -87,7 +92,7 @@ const DOMcontrol = (() => {
     function toggleEditable([...elements]) {
         for (let i = 0; i < [...elements].length; i++) {
             if ([...elements][i] !== undefined) {
-                if ([...elements][i].isContentEditable) element.setAttribute('contenteditable', 'false')
+                if ([...elements][i].isContentEditable) [...elements][i].setAttribute('contenteditable', 'false')
                 else[...elements][i].setAttribute('contenteditable', 'true')
             }
         }
@@ -95,25 +100,25 @@ const DOMcontrol = (() => {
 
     function checkWhetherEditNotes(e) {
         if (e.target.parentNode.parentNode.querySelector(`.task-notes`) || e.target.parentNode.parentNode.querySelector(`.task-notes-expanded`)) {
-            let editNotes = e.target.parentNode.parentNode.querySelector(`.task-notes`) || e.target.parentNode.parentNode.querySelector(`.task-notes-expanded`)
+            let editNotesDiv = e.target.parentNode.parentNode.querySelector(`.task-notes`) || e.target.parentNode.parentNode.querySelector(`.task-notes-expanded`)
             if (e.target.parentNode.parentNode.querySelector(`.task-notes`)) {
-                editNotes.classList.toggle("task-notes-expanded")
-                editNotes.classList.toggle("task-notes")
+                editNotesDiv.classList.toggle("task-notes-expanded")
+                editNotesDiv.classList.toggle("task-notes")
             }
-            return editNotes
+            return editNotesDiv
         }
     }
 
     function editDOMFinders(e, objectType) {
         let placeholder = e.target.parentNode.parentNode
         let name = e.target.parentNode.parentNode.querySelector(`.${objectType}-name`)
-        let notes = checkWhetherEditNotes(e)
+        let notesDiv = checkWhetherEditNotes(e)
         let dueDiv = e.target.parentNode.parentNode.querySelector(`.${objectType}-due`)
         let priorityButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-priority-icon`)
         let id = e.target.parentNode.parentNode.getAttribute(`data-${objectType}-id`)
         let deleteButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-delete-icon`)
         let saveButton = e.target.parentNode.parentNode.querySelector(`.${objectType}-save-icon`)
-        return { placeholder, name, notes, dueDiv, priorityButton, deleteButton, saveButton, id }
+        return { placeholder, name, notesDiv, dueDiv, priorityButton, deleteButton, saveButton, id }
     }
 
 
@@ -128,7 +133,7 @@ const DOMcontrol = (() => {
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
         editDueForm.value = editDue
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
-        toggleEditable([editing.name, editing.notes])
+        toggleEditable([editing.name, editing.notesDiv])
         //locate actual object being edited
         let actualObjectBeingEdited = activeEditingObject(objectType, editing.id)
         //find active project for notes
@@ -143,20 +148,15 @@ const DOMcontrol = (() => {
             appControl.deleteController(objectType, editing.placeholder, activeProject, editing.id)
         })
         editing.saveButton.onclick = function () {
-            saveChanges(objectType, actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.name, editing.dueDiv, editing.placeholder, editing.notes)
+            if (editDueForm.value > 0) editing.dueDiv.innerText = editedDueDate
+            else editing.dueDiv.innerText = "";
+            //if (editing.notesDiv) editing.notesDiv.setAttribute('contenteditable', 'false');
+            //editing.name.setAttribute('contenteditable', 'false');
+            toggleEditable([editing.name, editing.notesDiv])
+            editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
+            appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.notesDiv.innerText)
             editing.priorityButton.removeEventListener('click', appControl.priorityController)
         }
-    }
-
-    function saveChanges(objectType, objectBeingEdited, editedName, editedDueDate, editName, editDueDiv, editPlaceholder, editNotes) {
-        if (editedDueDate.length > 0) editDueDiv.innerText = editedDueDate
-        else editDueDiv.innerText = "";
-        editName.setAttribute('contenteditable', 'false');
-        if (editNotes) editNotes.setAttribute('contenteditable', 'false');
-        objectBeingEdited.editName(editedName)
-        objectBeingEdited.editDue(editedDueDate)
-        appControl.lsProjectSaver('projects', appControl.projectsToString())
-        editPlaceholder.classList.toggle(`${objectType}-placeholder-edit`)
     }
 
     function placeholderGen(template, name, due, priority, ID, notes, completed) {
@@ -215,15 +215,15 @@ const DOMcontrol = (() => {
     }
 
     projectViewList.onmouseover = function (e) {
-        if (e.target.className === "project-placeholder") hoverIcons(e.target, "project")
-        if (e.target.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode, "project")
-        if (e.target.parentNode.parentNode.className === "project-placeholder") hoverIcons(e.target.parentNode.parentNode, "project")
+        if (e.target.classList.contains("project-placeholder") || e.target.classList.contains("project-placeholder-active") || e.target.classList.contains("project-placeholder-active")) hoverIcons(e.target, "project")
+        if (e.target.parentNode.classList.contains("project-placeholder") || e.target.parentNode.classList.contains("project-placeholder-active") || e.target.parentNode.classList.contains("project-placeholder-active")) hoverIcons(e.target.parentNode, "project")
+        if (e.target.parentNode.parentNode.classList.contains("project-placeholder") || e.target.parentNode.parentNode.classList.contains("project-placeholder-active")) hoverIcons(e.target.parentNode.parentNode, "project")
     }
 
     projectViewList.onmouseout = function (e) {
-        if (e.target.className === "project-placeholder") rmHoverIcons(e.target, "project")
-        if (e.target.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode, "project")
-        if (e.target.parentNode.parentNode.className === "project-placeholder") rmHoverIcons(e.target.parentNode.parentNode, "project")
+        if (e.target.classList.contains("project-placeholder") || e.target.classList.contains("project-placeholder-active")) rmHoverIcons(e.target, "project")
+        if (e.target.parentNode.classList.contains("project-placeholder") || e.target.parentNode.classList.contains("project-placeholder-active")) rmHoverIcons(e.target.parentNode, "project")
+        if (e.target.parentNode.parentNode.classList.contains("project-placeholder") || e.target.parentNode.parentNode.classList.contains("project-placeholder-active")) rmHoverIcons(e.target.parentNode.parentNode, "project")
     }
 
     taskViewList.onmouseover = function (e) {
@@ -290,7 +290,8 @@ const DOMcontrol = (() => {
 
     function getFormInput(template) {
         let nameInput = document.querySelector(`[name="${template}-name"]`).value;
-        if (nameInput == "") nameInput = "Untitled Project"
+        if (nameInput == "" && template === "project") nameInput = "Untitled Project"
+        else if (nameInput == "" && template === "task") nameInput = "Untitled Task"
         let notesInput;
         if (document.querySelector(`[name="${template}-notes"]`)) {
             notesInput = document.querySelector(`[name="${template}-notes"]`).value
@@ -314,6 +315,7 @@ const DOMcontrol = (() => {
     return {
         login,
         logout,
+        clearLists,
         noProjectsWarning,
         clearNoTasksWarning,
         displayAllProjects,

@@ -24,7 +24,8 @@ const appControl = (() => {
         pushObj(appData.projects[0].tasks, defaultObject.dT)
         setActiveProject(1)
         DOMcontrol.displayAllProjects();
-        DOMcontrol.displayTasks(1); //need to change this fig later on when ID logic sorted!
+        DOMcontrol.displayTasks(1);
+        findActiveProjInDom(1)
     }
 
     const genDefault = () => {
@@ -64,12 +65,12 @@ const appControl = (() => {
     }
 
     function storeActiveProject() {
-        if (appData.userId) Fb.saveActive(appData.userId, getActiveProject())
+        if (Fb.auth.currentUser !== null) Fb.saveActive(Fb.auth.currentUser.uid, getActiveProject())
         else lsProjectSaver('activeproject', getActiveProject())
     }
 
     function fetchSavedActiveProject(activeProj) {
-        if (appData.userId) return activeProj
+        if (Fb.auth.currentUser !== null) return activeProj
         else if (lsFetchObj('activeproject') !== null) return lsFetchObj('activeproject')
         else return 1
     }
@@ -79,8 +80,8 @@ const appControl = (() => {
         DOMcontrol.setActive(placeholder)
     }
 
-    const restoreSavedObjects = (obj, activeProj) => {
-        let savedActiveProject = fetchSavedActiveProject(activeProj)
+    const restoreSavedObjects = (obj) => {
+        let savedActiveProject = getActiveProject()
         for (let i = 0; i < obj.length; i++) {
             let x = Project(obj[i].name, obj[i].due, obj[i].priority, obj[i].completed)
             pushObj(appData.projects, x)
@@ -188,7 +189,7 @@ const appControl = (() => {
             newObjectDisplayController(activeProject.tasks, "task");
             projectProgressBar(activeProject)
         }
-        if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
+        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
         else lsProjectSaver('projects', projectsToString())
     }
 
@@ -217,7 +218,7 @@ const appControl = (() => {
         let newPriority = editPriority(priorityButton.src)
         priorityButton.src = `${newPriority}.svg`
         actualObjectBeingEdited.editPriority(newPriority)
-        if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
+        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
         else lsProjectSaver('projects', projectsToString())
     }
 
@@ -242,7 +243,7 @@ const appControl = (() => {
         if (appData.projects.length < 1) {
             DOMcontrol.noProjectsWarning()
         }
-        if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
+        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
         else lsProjectSaver('projects', projectsToString())
     }
 
@@ -264,13 +265,25 @@ const appControl = (() => {
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
         projectProgressBar(activeProject)
-        if (appData.userId) Fb.saveProjects(appData.userId, projectsToString())
+        if (Fb.auth.currentUser !== null) Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
         else lsProjectSaver('projects', projectsToString())
     }
 
     function projectProgressBar(activeProject) {
         let x = activeProject.getProgress()
         DOMcontrol.progressPaint(getActiveProject(), x)
+    }
+
+    function saveChanges(objectBeingEdited, editedName, editedDueDate, editNotes) {
+        console.log({objectBeingEdited, editedName, editedDueDate, editNotes})
+        if (editNotes) objectBeingEdited.editNotes(editNotes)
+        objectBeingEdited.editName(editedName)
+        objectBeingEdited.editDue(editedDueDate)
+        if (Fb.auth.currentUser !== null) {
+            console.log(Fb.auth.currentUser)
+            Fb.saveProjects(Fb.auth.currentUser.uid, projectsToString())
+        }
+        else lsProjectSaver('projects', projectsToString())
     }
 
     return {
@@ -295,6 +308,7 @@ const appControl = (() => {
         checkForProjects,
         restoreSavedObjects,
         priorityController,
+        saveChanges,
     }
 
 })();
