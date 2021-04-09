@@ -36,29 +36,24 @@ const Template = (() => {
                         tag: `div`,
                         children: [
                             {
-                                tag: 'label',
-                                for: 'priority',
-                                content: 'priority',
-                            },
-                            {
                                 tag: 'select',
                                 name: 'project-priority',
                                 children: [
                                     {
                                         tag: 'option',
                                         value: 'normal',
-                                        content: 'Normal',
+                                        content: 'Normal Priority',
                                         selected: 'true',
                                     },
                                     {
                                         tag: 'option',
                                         value: 'high',
-                                        content: 'High',
+                                        content: 'High Priority',
                                     },
                                     {
                                         tag: 'option',
                                         value: 'low',
-                                        content: 'Low',
+                                        content: 'Low Priority',
                                     },
                                 ]
                             }
@@ -123,29 +118,24 @@ const Template = (() => {
                         tag: `div`,
                         children: [
                             {
-                                tag: 'label',
-                                for: 'priority',
-                                content: 'priority',
-                            },
-                            {
                                 tag: 'select',
                                 name: 'task-priority',
                                 children: [
                                     {
                                         tag: 'option',
                                         value: 'normal',
-                                        content: 'Normal',
+                                        content: 'Normal Priority',
                                         selected: 'true',
                                     },
                                     {
                                         tag: 'option',
                                         value: 'high',
-                                        content: 'High',
+                                        content: 'High Priority',
                                     },
                                     {
                                         tag: 'option',
                                         value: 'low',
-                                        content: 'Low',
+                                        content: 'Low Priority',
                                     },
                                 ]
                             }
