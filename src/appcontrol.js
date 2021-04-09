@@ -194,7 +194,7 @@ const appControl = (() => {
             newObjectDisplayController(activeProject.tasks, "task");
             projectProgressBar(activeProject)
         }
-        
+        saveController()
     }
 
     function checkForProjects() {
@@ -266,6 +266,7 @@ const appControl = (() => {
         let activeProject = lookupProject(getActiveProject())
         let activeTask = lookupTask(activeProject, id)
         activeTask.toggleCompleted()
+        DOMcontrol.strikeThroughCompleted(id)
         projectProgressBar(activeProject)
         saveController()
     }
