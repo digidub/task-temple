@@ -78,10 +78,22 @@ svg {
 }
 
 .task-form {
+    display: grid;
+    grid-template-columns: 20% 70% 10%;
+}
+
+.task-form-column-left input{
+    width: 100%
+}
+
+.task-form-column-right {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
+}
+
+.task-form-column-right textarea {
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
 }
 
 h3 {
@@ -90,7 +102,7 @@ h3 {
 }
 
 .project-placeholder {
-    padding: 5px 0px 5px 0px;
+    padding: 5px 0px 5px 4px;
     margin: 5px 0px 5px 0px;
     display: grid;
     grid-template-columns: 80% 10% 10% 0%;
@@ -99,6 +111,8 @@ h3 {
     height: auto;
     color: #444444;
     cursor: pointer;
+    border: 3px dashed #E8EBF1FF;
+    border-radius: 10px
 }
 
 .task-placeholder {
@@ -117,11 +131,12 @@ h3 {
 
 .project-placeholder:hover {
     color:black;
-    border-right: 1px solid #ccc;
+    border: 3px dashed rgb(213, 216, 221);
+    border-radius: 10px
 }
 
 .project-placeholder-active {
-    padding: 5px 0px 5px 0px;
+    padding: 5px 0px 5px 4px;
     margin: 5px 0px 5px 0px;
     display: grid;
     grid-template-columns: 80% 10% 10% 0%;
@@ -130,8 +145,9 @@ h3 {
     height: auto;
     cursor: pointer;
     color:black;
-    border-right: 1px solid black;
     font-weight: bold;
+    border: 3px dashed rgb(181, 182, 185);
+    border-radius: 10px
 }
 
 .project-placeholder-edit {
@@ -148,10 +164,6 @@ h3 {
 .edit-delete-save {
     display: flex;
     flex-direction: row;
-}
-
-.add-project-form {
-    width: auto;
 }
 
 .project-due {
@@ -190,12 +202,16 @@ h3 {
     font-family: "Open Sans";
     font-size: small;
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
-border-radius: 6px;
-padding: 7px;
+    border-radius: 6px;
+    padding: 7px;
 }
 
 .task-status {
     overflow: hidden;
+}
+
+.strikethrough {
+    text-decoration: line-through;
 }
 
 .modal {
@@ -232,6 +248,17 @@ button:focus,
     outline: none;
 }
 
+div[contenteditable="true"] {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
+    border-radius: 6px;
+    width: 100%;
+}
+
+.add-project-form input {
+    width: 100%;
+    margin: 2px 0px 2px 0px;
+}
+
 select {
     background-color: #fdfdfd;
 }
@@ -240,7 +267,7 @@ input[type=text], input[type=date], select {
     padding: 5px 0px 5px 2px
 }
 
-input, select {
+input, select, textarea {
     border: none;
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='6' ry='6' stroke='%23E8EBF1FF' stroke-width='3' stroke-dasharray='8' stroke-dashoffset='100' stroke-linecap='butt'/%3e%3c/svg%3e");
 border-radius: 6px;
