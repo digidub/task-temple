@@ -40,6 +40,7 @@ const Fb = (() => {
             DOMcontrol.login.classList.remove("hide")
             DOMcontrol.clearLists()
             appData.projects = []
+            appControl.lsLoadActiveProject()
             appControl.localStorageLoader('projects')
         }
     })
