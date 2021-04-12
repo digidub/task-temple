@@ -343,6 +343,7 @@ const Template = (() => {
     }
 
     function prioritySelector(priority) {
+        console.log(priority)
         if (priority === "normal") normalPriorityIcon
         else if (priority === "high") highPriorityIcon
         else return lowPriorityIcon
