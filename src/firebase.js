@@ -47,8 +47,9 @@ const Fb = (() => {
     function getUserData(userId) {
         firebase.database().ref().child("users").child(userId).get().then(function (snapshot) {
             if (snapshot.exists()) {
-                appControl.setActiveProject(snapshot.val().active.active)
-                appControl.restoreSavedObjects(snapshot.val().projects.projects, "1")
+                let active = snapshot.val().active.active
+                appControl.setActiveProject(active)
+                appControl.restoreSavedObjects(snapshot.val().projects.projects)
             }
             else {
                 console.log("No data available");
