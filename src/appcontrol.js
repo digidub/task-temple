@@ -4,7 +4,7 @@ import { Project } from './projects'
 import { Task } from './tasks'
 import { DOMcontrol } from './domcontrol'
 import { Template } from "./template";
-import { Fb } from "./firebase";
+import { Fb } from "./index";
 
 
 const appControl = (() => {
@@ -290,6 +290,17 @@ const appControl = (() => {
         saveController()
     }
 
+    function fbLogin () {
+        const SignInWithGoogle = () => {
+            Fb.auth.signInWithPopup(Fb.provider)
+        }
+        SignInWithGoogle()
+    }
+
+    function fbLogout() {
+        Fb.auth.signOut()
+    }
+
     return {
         genDefaultProject,
         genDefaultTask,
@@ -314,6 +325,8 @@ const appControl = (() => {
         restoreSavedObjects,
         priorityController,
         saveChanges,
+        fbLogin,
+        fbLogout,
     }
 
 })();
