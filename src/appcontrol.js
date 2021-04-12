@@ -40,6 +40,13 @@ const appControl = (() => {
         return defaultProject
     }
 
+    function lsLoadActiveProject() {
+        if (lsStorageCheck('activeproject')) {
+            let restored = lsFetchObj('activeproject');
+            setActiveProject(restored)
+        }
+    }
+
     const genDefaultTask = () => {
         let defaultTask = Task("Create your first project (or task!)", "tasktemple lets you organise your to do list by groups - or projects. Set due date, priority, and add notes")
         return defaultTask
@@ -286,6 +293,7 @@ const appControl = (() => {
     return {
         genDefaultProject,
         genDefaultTask,
+        lsLoadActiveProject,
         localStorageLoader,
         lsProjectSaver,
         lsStorageCheck,
