@@ -285,7 +285,7 @@ const DOMcontrol = (() => {
         }
         else {
             projectView.removeChild(document.querySelector(".add-project-form"))
-            newProjectIcon.src = "add.svg"
+            newProjectIcon.src = addIcon
         }
     }
 
@@ -297,7 +297,7 @@ const DOMcontrol = (() => {
         }
         else {
             taskView.removeChild(document.querySelector(".add-task-form"))
-            newTaskIcon.src = "add.svg"
+            newTaskIcon.src = addIcon
         }
     }
 
