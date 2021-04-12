@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development",
-    "start": "webpack serve",
+    "start": "webpack serve --open",
     "watch": "webpack --watch",
     "build": "webpack"
   },
@@ -13,11 +13,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "copy-webpack-plugin": "^8.0.0",
     "css-loader": "^5.1.2",
     "html-webpack-plugin": "^5.3.1",
+    "source-map-loader": "^2.0.1",
     "style-loader": "^2.0.0",
     "webpack": "^5.25.0",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "clamp-js": "^0.7.0",
+    "firebase": "^8.3.2",
+    "firebaseui": "^4.8.0"
   }
 }
