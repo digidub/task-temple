@@ -80,43 +80,33 @@ const Template = (() => {
                 classes: ['task-form'],
                 children: [
                     {
-                        tag: `div`,
+                        tag: 'div',
+                        classes: ['task-form-column-left'],
                         children: [
                             {
-                                tag: 'input',
-                                type: 'text',
-                                name: 'task-name',
-                                required: 'required',
-                                placeholder: 'Task Name'
-                            }
-                        ]
-                    },
-                    {
-                        tag: `div`,
-                        children: [
+                                tag: `div`,
+                                children: [
+                                    {
+                                        tag: 'input',
+                                        type: 'text',
+                                        name: 'task-name',
+                                        required: 'required',
+                                        placeholder: 'Task Name'
+                                    }
+                                ]
+                            },
                             {
-                                tag: 'input',
-                                type: 'text',
-                                name: 'task-notes',
-                                placeholder: 'Notes'
-                            }
-                        ]
-                    },
-                    {
-                        tag: `div`,
-                        children: [
-                            {
-                                tag: 'input',
-                                type: 'date',
-                                name: 'task-due',
-                                required: 'required',
-                                placeholder: 'Due Date'
-                            }
-                        ]
-                    },
-                    {
-                        tag: `div`,
-                        children: [
+                                tag: `div`,
+                                children: [
+                                    {
+                                        tag: 'input',
+                                        type: 'date',
+                                        name: 'task-due',
+                                        required: 'required',
+                                        placeholder: 'Due Date'
+                                    }
+                                ]
+                            },
                             {
                                 tag: 'select',
                                 name: 'task-priority',
@@ -138,7 +128,23 @@ const Template = (() => {
                                         content: 'Low Priority',
                                     },
                                 ]
-                            }
+                            },
+                        ]
+                    },
+                    {
+                        tag: 'div',
+                        classes: ['task-form-column-right'],
+                        children: [
+                            {
+                                tag: `div`,
+                                children: [
+                                    {
+                                        tag: 'textarea',
+                                        name: 'task-notes',
+                                        placeholder: 'Notes'
+                                    }
+                                ]
+                            },
                         ]
                     },
                     {
