@@ -3,12 +3,12 @@ import { Project } from './projects'
 import { Task } from './tasks'
 import { lsControl } from './localstorage'
 import { appControl } from './appcontrol'
-import { DOMcontrol } from './domcontrol'
 import { appData } from './appdata';
 import favicon from './favicon.ico'
 import firebase from "firebase/app";
 import "firebase/auth"
 import "firebase/firebase-database"
+import { DOMcontrol } from './domcontrol'
 
 const Fb = (() => {
 
