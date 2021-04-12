@@ -87,7 +87,6 @@ const appControl = (() => {
 
     const restoreSavedObjects = (obj) => {
         let savedActiveProject = getActiveProject()
-        console.log(savedActiveProject)
         for (let i = 0; i < obj.length; i++) {
             let x = Project(obj[i].name, obj[i].due, obj[i].priority, obj[i].completed)
             pushObj(appData.projects, x)
