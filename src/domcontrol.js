@@ -281,8 +281,10 @@ const DOMcontrol = (() => {
             newProjectIcon.src = "hide.svg"
             generateForm("project", projectView)
         }
-        else projectView.removeChild(document.querySelector(".add-project-form"))
-        newProjectIcon.src = "add.svg"
+        else {
+            projectView.removeChild(document.querySelector(".add-project-form"))
+            newProjectIcon.src = "add.svg"
+        }
     }
 
     newTask.onclick = function () {
@@ -291,8 +293,10 @@ const DOMcontrol = (() => {
             if (appControl.checkForProjects() > 0) generateForm("task", taskView)
             else noProjectsWarning()
         }
-        else taskView.removeChild(document.querySelector(".add-task-form"))
-        newTaskIcon.src = "add.svg"
+        else {
+            taskView.removeChild(document.querySelector(".add-task-form"))
+            newTaskIcon.src = "add.svg"
+        }
     }
 
     function generateForm(template, parent) {
@@ -331,7 +335,7 @@ const DOMcontrol = (() => {
 
     function progressPaint(id, progress) {
         let projectPlaceholder = projectViewList.querySelector(`[data-project-id="${id}"]`)
-        projectPlaceholder.style.background = `linear-gradient(135deg, rgba(245, 245, 245) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
+        projectPlaceholder.style.background = `linear-gradient(135deg, rgba(232, 235, 241) ${progress}%, rgba(238,238,238,0) ${progress}%)`;
     }
 
     return {
