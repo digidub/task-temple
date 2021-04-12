@@ -87,6 +87,7 @@ const appControl = (() => {
 
     const restoreSavedObjects = (obj) => {
         let savedActiveProject = getActiveProject()
+        console.log(savedActiveProject)
         for (let i = 0; i < obj.length; i++) {
             let x = Project(obj[i].name, obj[i].due, obj[i].priority, obj[i].completed)
             pushObj(appData.projects, x)
@@ -101,6 +102,7 @@ const appControl = (() => {
             projectProgressBar(lookupProject(getActiveProject()))
         }
         if (appData.projects.length > 0) DOMcontrol.displayTasks(savedActiveProject)
+        setActiveProject(savedActiveProject)
         findActiveProjInDom(savedActiveProject)
     }
 
@@ -258,7 +260,6 @@ const appControl = (() => {
         let newID = switchIDByIndex(index)
         if (newID === 0) return;
         setActiveProject(newID)
-        console.log(getActiveProject())
         storeActiveProject()
     }
 
@@ -277,10 +278,9 @@ const appControl = (() => {
     }
 
     function saveChanges(objectBeingEdited, editedName, editedDueDate, editNotes) {
-        console.log({ objectBeingEdited, editedName, editedDueDate, editNotes })
-        if (editNotes) objectBeingEdited.editNotes(editNotes)
         objectBeingEdited.editName(editedName)
         objectBeingEdited.editDue(editedDueDate)
+        if (editNotes) objectBeingEdited.editNotes(editNotes)
         saveController()
     }
 
