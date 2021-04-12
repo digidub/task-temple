@@ -3,14 +3,6 @@ import { appData } from "./appdata";
 import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
 import { Fb } from "./firebase";
-import hideIcon from './hide.svg'
-import lowPriorityIcon from './low.svg'
-import normalPriorityIcon from './normal.svg'
-import highPriorityIcon from './high.svg'
-import saveIcon from './save.svg'
-import editIcon from './edit.svg'
-import deleteIcon from './delete.svg'
-import addIcon from './add.svg'
 
 const DOMcontrol = (() => {
 

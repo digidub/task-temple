@@ -6,4 +6,12 @@ import { lsControl } from './localstorage'
 import { appControl } from './appcontrol'
 import { DOMcontrol } from './domcontrol'
 import { appData } from './appdata';
-
+import hideIcon from './hide.svg'
+import lowPriorityIcon from './low.svg'
+import normalPriorityIcon from './normal.svg'
+import highPriorityIcon from './high.svg'
+import saveIcon from './save.svg'
+import editIcon from './edit.svg'
+import deleteIcon from './delete.svg'
+import addIcon from './add.svg'
+import favicon from './favicon.ico'
