@@ -3,6 +3,7 @@ import { appData } from "./appdata";
 import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
 import { Fb } from "./firebase";
+import hideIcon from './hide.svg'
 
 const DOMcontrol = (() => {
 
@@ -278,7 +279,7 @@ const DOMcontrol = (() => {
 
     newProject.onclick = function () {
         if (!document.querySelector(".add-project-form")) {
-            newProjectIcon.src = "hide.svg"
+            newProjectIcon.src = hideIcon
             generateForm("project", projectView)
         }
         else {
@@ -289,7 +290,7 @@ const DOMcontrol = (() => {
 
     newTask.onclick = function () {
         if (!document.querySelector(".add-task-form")) {
-            newTaskIcon.src = "hide.svg"
+            newTaskIcon.src = hideIcon
             if (appControl.checkForProjects() > 0) generateForm("task", taskView)
             else noProjectsWarning()
         }

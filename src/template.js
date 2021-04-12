@@ -1,3 +1,10 @@
+import saveIcon from './save.svg'
+import editIcon from './edit.svg'
+import deleteIcon from './delete.svg'
+import lowPriorityIcon from './low.svg'
+import normalPriorityIcon from './normal.svg'
+import highPriorityIcon from './high.svg'
+
 const Template = (() => {
 
     const project = {
@@ -187,7 +194,7 @@ const Template = (() => {
                         {
                             tag: "img",
                             classes: ["project-priority-icon"],
-                            src: `${projectPriority.toLowerCase()}.svg`
+                            src: prioritySelector(projectPriority)
                         },
                     ]
                 },
@@ -198,7 +205,7 @@ const Template = (() => {
                         {
                             tag: "img",
                             classes: ["project-edit-icon"],
-                            src: "edit.svg"
+                            src: editIcon
                         },
                     ]
                 },
@@ -213,7 +220,7 @@ const Template = (() => {
                                 {
                                     tag: "img",
                                     classes: ["project-delete-icon"],
-                                    src: "delete.svg",
+                                    src: deleteIcon,
                                 }
                             ]
                         },
@@ -224,7 +231,7 @@ const Template = (() => {
                                 {
                                     tag: "img",
                                     classes: ["project-save-icon"],
-                                    src: "save.svg",
+                                    src: saveIcon,
                                 }
                             ]
                         }
@@ -236,7 +243,7 @@ const Template = (() => {
         }
     }
 
-    const taskPlaceholder = (taskName, taskDue = "", taskPriority = "normal", taskID, taskNotes, taskCompleted) => {
+    const taskPlaceholder = (taskName, taskDue = "", taskPriority, taskID, taskNotes, taskCompleted) => {
         return {
             tag: "div",
             classes: ["task-placeholder"],
@@ -288,7 +295,7 @@ const Template = (() => {
                         {
                             tag: "img",
                             classes: ["task-priority-icon"],
-                            src: `${taskPriority.toLowerCase()}.svg`
+                            src: prioritySelector(taskPriority)
                         }
                     ]
                 },
@@ -299,7 +306,7 @@ const Template = (() => {
                         {
                             tag: "img",
                             classes: ["task-edit-icon"],
-                            src: "edit.svg"
+                            src: editIcon
                         }
                     ]
                 },
@@ -314,7 +321,7 @@ const Template = (() => {
                                 {
                                     tag: "img",
                                     classes: ["task-delete-icon"],
-                                    src: "delete.svg",
+                                    src: deleteIcon,
                                 }
                             ]
                         },
@@ -325,7 +332,7 @@ const Template = (() => {
                                 {
                                     tag: "img",
                                     classes: ["task-save-icon"],
-                                    src: "save.svg",
+                                    src: saveIcon,
                                 }
                             ]
                         }
@@ -333,6 +340,12 @@ const Template = (() => {
                 },
             ]
         }
+    }
+
+    function prioritySelector(priority) {
+        if (priority === "normal") normalPriorityIcon
+        else if (priority === "high") highPriorityIcon
+        else return lowPriorityIcon
     }
 
     return {
