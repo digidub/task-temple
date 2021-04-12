@@ -2,7 +2,6 @@ import { appControl } from "./appcontrol";
 import { appData } from "./appdata";
 import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
-import { Fb } from "./firebase";
 import hideIcon from './hide.svg'
 import addIcon from './add.svg'
 
@@ -20,8 +19,9 @@ const DOMcontrol = (() => {
     const aboutBtn = document.querySelector(".nav-about");
     const logout = document.querySelector(".logout")
     const modal = document.querySelector(".modal")
-    newProject.src = addIcon
-    newTask.src = addIcon
+    newProjectIcon.src = addIcon
+    newTaskIcon.src = addIcon
+
 
     aboutBtn.onclick = function () {
         modal.style.display = "block";
@@ -36,14 +36,12 @@ const DOMcontrol = (() => {
     }
 
     logout.onclick = function () {
-        Fb.auth.signOut();
+        appControl.fbLogout()
     }
 
     login.onclick = function () {
-        const SignInWithGoogle = () => {
-            Fb.auth.signInWithPopup(Fb.provider)
-        }
-        SignInWithGoogle()
+        appControl.fbLogin()
+
     }
 
     function noProjectsWarning() {
