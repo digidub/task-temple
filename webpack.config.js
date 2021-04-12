@@ -4,28 +4,32 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
     mode: 'production',
     entry: './src/index.js',
-    devtool: 'inline-source-map',
+    //devtool: 'inline-source-map',
     module: {
         rules: [
-            {
+            /*{
                 test: /\.js$/,
                 enforce: "pre",
                 use: ["source-map-loader"],
-            },
+            },*/
             {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
             },
             {
-                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
                 type: 'asset/resource',
+                loader: 'file-loader',
+                options: {
+                    name: '[name].[ext]',
+                  },
             },
         ]
     },
-    devServer: {
+    /*devServer: {
         contentBase: './src',
         port: 9000,
-    },
+    },*/
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),
@@ -35,7 +39,8 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: "index.html",
             template: path.resolve(__dirname, "src", "index.html"),
-            title: "Development",
+            title: "Production",
+            favicon: "./src/favicon.ico",
             inject: false,
         }),
     ]
