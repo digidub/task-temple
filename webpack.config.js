@@ -1,5 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+
 
 module.exports = {
     mode: 'production',
@@ -20,9 +24,6 @@ module.exports = {
                 test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
                 type: 'asset/resource',
                 loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]',
-                  },
             },
         ]
     },
@@ -40,8 +41,9 @@ module.exports = {
             filename: "index.html",
             template: path.resolve(__dirname, "src", "index.html"),
             title: "Production",
-            favicon: "./src/favicon.ico",
             inject: false,
         }),
+        new CleanWebpackPlugin({ protectWebpackAssets: false, }),
+        new BundleAnalyzerPlugin()
     ]
 };
