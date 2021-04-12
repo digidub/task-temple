@@ -5,6 +5,8 @@ import lowPriorityIcon from './low.svg'
 import normalPriorityIcon from './normal.svg'
 import highPriorityIcon from './high.svg'
 
+console.log(lowPriorityIcon)
+
 const Template = (() => {
 
     const project = {
@@ -344,8 +346,8 @@ const Template = (() => {
 
     function prioritySelector(priority) {
         console.log(priority)
-        if (priority === "normal") normalPriorityIcon
-        else if (priority === "high") highPriorityIcon
+        if (priority === "normal") return normalPriorityIcon
+        else if (priority === "high") return highPriorityIcon
         else return lowPriorityIcon
     }
 
