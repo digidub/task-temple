@@ -4,6 +4,7 @@ import { Template } from "./template";
 import { ObjectToDOM } from "./objectdom";
 import { Fb } from "./firebase";
 import hideIcon from './hide.svg'
+import addIcon from './add.svg'
 
 const DOMcontrol = (() => {
 
@@ -19,6 +20,8 @@ const DOMcontrol = (() => {
     const aboutBtn = document.querySelector(".nav-about");
     const logout = document.querySelector(".logout")
     const modal = document.querySelector(".modal")
+    newProject.src = addIcon
+    newTask.src = addIcon
 
     aboutBtn.onclick = function () {
         modal.style.display = "block";
