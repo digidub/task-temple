@@ -1,6 +1,6 @@
 # tasktemple
 
-## Achieve zen with your todo list
+Achieve zen with your todo list
 
 ***
 
