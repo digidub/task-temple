@@ -20,6 +20,6 @@ tasktemple is a straightforward to-do list app built with vanilla JavaScript tha
 
     I further honed my skills in webpack (partiularly getting to grips with development vs. production environments, using plugins such as HtmlWebpackPlugin and file loaders)
 
-- ****ES6 modules**
+- **ES6 modules**
 
     ES6 modules were used within this project. Focus will be spent on future in reducing circular dependencies (which were revealed when I analysed my project using [webpack-bundle-analyzer](https://github.com/webpack-contrib/webpack-bundle-analyzer))
