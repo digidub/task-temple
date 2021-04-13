@@ -135,7 +135,7 @@ const DOMcontrol = (() => {
         let editDueForm = e.target.parentNode.parentNode.querySelector("#edit-date")
         let clearDateDiv = e.target.parentNode.parentNode.querySelector("#clear-date")
         editDueForm.value = existingEditDueValue
-        if (editing.notesDiv) editing.notesDiv.classList.remove("strikethrough")
+        if (editing.notesDiv.classList.contains("strikethrough")) editing.notesDiv.classList.remove("strikethrough")
         editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
         toggleEditable([editing.name, editing.notesDiv])
         //locate actual object being edited
@@ -159,9 +159,13 @@ const DOMcontrol = (() => {
                 editing.notesDiv.classList.add("task-notes")
                 editing.notesDiv.classList.add("strikethrough")
             }
-            if (editing.notesDiv && editing.notesDiv.innerText == "") editing.notesDiv.classList.remove("task-notes-expanded")
+            if (editing.notesDiv && editing.notesDiv.innerText == "") {
+                editing.notesDiv.classList.remove("task-notes-expanded")
+                editing.notesDiv.classList.add("task-notes")
+            }
             editing.placeholder.classList.toggle(`${objectType}-placeholder-edit`)
-            appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.notesDiv.innerText)
+            if (editing.notesDiv) appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value, editing.notesDiv.innerText)
+            else appControl.saveChanges(actualObjectBeingEdited, editing.name.innerText, editDueForm.value)
             editing.priorityButton.removeEventListener('click', appControl.priorityController)
         }
     }
