@@ -1,17 +1,18 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      favicon: './src/favicon.ico',
       template: path.resolve(__dirname, 'src', 'index.html'),
       inject: false,
     }),
     new CleanWebpackPlugin({ protectWebpackAssets: false }),
+    new FaviconsWebpackPlugin('./src/favicon.ico'),
   ],
   output: {
     filename: 'main.js',
