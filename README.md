@@ -1,6 +1,6 @@
 # tasktemple :hindu_temple:
 
-Achieve :lotus_position_woman: zen :lotus_position_man: with your todo list 
+Achieve :lotus_position_woman: zen :lotus_position_man: with your todo list
 
 ***
 
